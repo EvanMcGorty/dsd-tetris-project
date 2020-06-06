@@ -16,19 +16,17 @@ class PytrisWidget(Frame):
 		master.minsize(10*PIECE_SIZE,20*PIECE_SIZE)
 		self.canvas = Canvas(self,width=10*PIECE_SIZE,height=20*PIECE_SIZE)
 		self.canvas.pack()
-		self.canvas.focus_set()
+		self.canvas.focus_set()		
 		self.canvas.bind('<Key>',self.turn_key_on)
 		self.canvas.bind('<KeyRelease>',self.turn_key_off)
 		self.run_frame()
 
 	def turn_key_on(self,keyname):
-		global KEYS
 		for i in range(0,len(KEYS)):
 			if keyname.keysym == KEYS[i]:
 				buttons[i] = True
 		
 	def turn_key_off(self,keyname):
-		global KEYS
 		for i in range(0,len(KEYS)):
 			if keyname.keysym == KEYS[i]:
 				buttons[i] = False
