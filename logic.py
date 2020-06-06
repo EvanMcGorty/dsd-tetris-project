@@ -1,17 +1,26 @@
-from piece_data import*
-from random import choice
-
-
-paint_update_board = make_board_matrix(BACKGROUND_TILE)
-
+from piece_operations import*
+from player_settings import*
 
 buttons = []
 for i in range(0,8):
 	buttons.append(False)
 
-
-
 framecount = 0
+
+	
+def get_next_piece():
+	return construct_piece(choice(list(PIECE_INDEX.values())))
+
+cur_piece = None
+cur_coords = None
+
+def initialize_next_piece():
+	global cur_piece
+	global cur_coords
+	cur_piece = get_next_piece()
+	cur_coords = PIECE_SPAWN_COORDS[cur_piece[0]]
+
+initialize_next_piece()
 
 def debug_display_keys():
 	curpressed = ""
@@ -24,52 +33,10 @@ def debug_paint_test():
 	global paint_update_board
 	paint_update_board[framecount%19][framecount%10] = framecount%8
 
-
-board = make_board_matrix(BACKGROUND_TILE)
-
-
-def is_occupiable(x,y):
-	if len(board)<=y:
-		return False
-	if len(board[y])<=x:
-		return False
-	if board[y][x] != BACKGROUND_TILE:
-		return False
-	return True
-
-def can_place_piece(pieceval,x,y):
-	for ix in range(MATRIX_SIZE[pieceval[0]]):
-		for iy in range(MATRIX_SIZE[pieceval[0]]):
-			if index_piece(pieceval,ix,iy) != BACKGROUND_TILE:
-				if not is_occupiable(ix+x,iy+y):
-					return False
-	return True
-	
-def place_piece(pieceval,x,y):
-	for ix in range(MATRIX_SIZE[pieceval[0]]):
-		for iy in range(MATRIX_SIZE[pieceval[0]]):
-			cur = index_piece(pieceval,ix,iy)
-			if cur != BACKGROUND_TILE:
-				board[iy+y][ix+x] = cur
-				paint_update_board[iy+y][ix+x] = cur
-
-def clear_piece(pieceval,x,y):
-	for ix in range(MATRIX_SIZE[pieceval[0]]):
-		for iy in range(MATRIX_SIZE[pieceval[0]]):
-			cur = index_piece(pieceval,ix,iy)
-			if cur != BACKGROUND_TILE:
-				board[iy+y][ix+x] = BACKGROUND_TILE
-				paint_update_board[iy+y][ix+x] = BACKGROUND_TILE
-	
-	
-
-def get_next_piece():
-	return construct_piece(choice(PIECE_INDEX.values()))
-
 def perform_frame_logic():
 	global framecount
 	global paint_update_board
-	debug_paint_test()
-	debug_display_keys()
+	#debug_paint_test()
+	#debug_display_keys()
 	
 	framecount+=1
