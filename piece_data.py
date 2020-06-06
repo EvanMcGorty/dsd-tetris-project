@@ -31,135 +31,41 @@ def make_matrix(string,color):
 			currow = []
 	return ret
 
-def make_matricies(strings,color):
-	ret = []
-	for i in strings:
-		ret.append(make_matrix(i,color))
-	return ret
 
-rotations = {
-PIECE_INDEX['i']:make_matricies([
+pieces = {
+PIECE_INDEX['i']:make_matrix(
 """oooo
 xxxx
 oooo
 oooo
-""",
-"""ooxo
-ooxo
-ooxo
-ooxo
-""",
-"""oooo
-oooo
-xxxx
-oooo
-""",
-"""oxoo
-oxoo
-oxoo
-oxoo
-"""],PIECE_INDEX['i']),
-	PIECE_INDEX['j']:make_matricies([
-		"""xoo
+""",PIECE_INDEX['i']),
+	PIECE_INDEX['j']:make_matrix(
+"""xoo
 xxx
 ooo
-""",
-"""oxx
-oxo
-oxo
-""",
-"""ooo
-xxx
-oox
-""",
-"""oxo
-oxo
-xxo
-"""],PIECE_INDEX['j']),
-PIECE_INDEX['l']:make_matricies([
+""",PIECE_INDEX['j']),
+PIECE_INDEX['l']:make_matrix(
 		"""oox
 xxx
 ooo
-""",
+""",PIECE_INDEX['l']),
+PIECE_INDEX['o']:make_matrix(
+"""xx
+xx
+""",PIECE_INDEX['o']),
+PIECE_INDEX['s']:make_matrix(
+"""oxx
+xxo
+ooo
+""",PIECE_INDEX['s']),
+PIECE_INDEX['t']:make_matrix(
 """oxo
-oxo
-oxx
-""",
-"""ooo
 xxx
-xoo
-""",
+ooo
+""",PIECE_INDEX['t']),
+PIECE_INDEX['z']:make_matrix(
 """xxo
-oxo
-oxo
-"""],PIECE_INDEX['l']),
-PIECE_INDEX['o']:make_matricies([
-		"""oxx
 oxx
 ooo
-""",
-"""oxx
-oxx
-ooo
-""",
-"""oxx
-oxx
-ooo
-""",
-"""oxx
-oxx
-ooo
-"""],PIECE_INDEX['o']),
-PIECE_INDEX['s']:make_matricies([
-		"""oxx
-xxo
-ooo
-""",
-"""oxo
-oxx
-oox
-""",
-"""ooo
-oxx
-xxo
-""",
-"""xoo
-xxo
-oxo
-"""],PIECE_INDEX['s']),
-PIECE_INDEX['t']:make_matricies([
-		"""oxo
-xxx
-ooo
-""",
-"""oxo
-oxx
-oxo
-""",
-"""ooo
-xxx
-oxo
-""",
-"""oxo
-xxo
-oxo
-""",
-],PIECE_INDEX['t']),
-PIECE_INDEX['z']:make_matricies([
-		"""xxo
-oxx
-ooo
-""",
-"""oox
-oxx
-oxo
-""",
-"""ooo
-xxo
-oxx
-""",
-"""oxo
-xxo
-xoo
-"""],PIECE_INDEX['z'])
+""",PIECE_INDEX['z'])
 }
