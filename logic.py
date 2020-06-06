@@ -25,10 +25,10 @@ def debug_paint_test():
 	paint_update_board[framecount%19][framecount%10] = framecount%8
 
 
-main_board = make_board_matrix(BACKGROUND_TILE)
+board = make_board_matrix(BACKGROUND_TILE)
 
 
-def is_occupiable(board,x,y):
+def is_occupiable(x,y):
 	if len(board)<=y:
 		return False
 	if len(board[y])<=x:
@@ -37,15 +37,15 @@ def is_occupiable(board,x,y):
 		return False
 	return True
 
-def can_place_piece(pieceval,board,x,y):
+def can_place_piece(pieceval,x,y):
 	for ix in range(MATRIX_SIZE[pieceval[0]]):
 		for iy in range(MATRIX_SIZE[pieceval[0]]):
 			if index_piece(pieceval,ix,iy) != BACKGROUND_TILE:
-				if not is_occupiable(board,ix+x,iy+y):
+				if not is_occupiable(ix+x,iy+y):
 					return False
 	return True
 	
-def place_piece(pieceval,board,x,y):
+def place_piece(pieceval,x,y):
 	for ix in range(MATRIX_SIZE[pieceval[0]]):
 		for iy in range(MATRIX_SIZE[pieceval[0]]):
 			cur = index_piece(pieceval,ix,iy)
@@ -53,7 +53,7 @@ def place_piece(pieceval,board,x,y):
 				board[iy+y][ix+x] = cur
 				paint_update_board[iy+y][ix+x] = cur
 
-def clear_piece(pieceval,board,x,y):
+def clear_piece(pieceval,x,y):
 	for ix in range(MATRIX_SIZE[pieceval[0]]):
 		for iy in range(MATRIX_SIZE[pieceval[0]]):
 			cur = index_piece(pieceval,ix,iy)
