@@ -38,6 +38,35 @@ def finalize_placement():
 		place_piece(cur_piece,cur_x,cur_y)
 		initialize_next_piece()
 
+def try_dropping():
+	global until_next_fall
+
+	if buttons[HARD] and buttons_release_wait[HARD]:
+		buttons_release_wait[HARD] = False
+		until_next_fall=-21*GRAVITY
+	elif buttons[SOFT]:
+		until_next_fall-=SDF
+	else:
+		until_next_fall-=1
+
+
+def try_falling():
+	global until_next_fall
+	global cur_x
+	global cur_y
+
+	while until_next_fall<=0:
+		until_next_fall+=GRAVITY
+		if can_place_piece(cur_piece,cur_x,cur_y-1):
+			cur_y-=1
+		else:
+			finalize_placement()
+
+def try_rotate():
+	global cur_x
+	global cur_y
+
+
 
 '''
 def debug_display_keys():
@@ -53,30 +82,18 @@ def debug_paint_test():
 '''
 
 def perform_frame_logic():
-	if game_over:
-		return
 	global framecount
-	global paint_update_board
-	global until_next_fall
 	global cur_x
 	global cur_y
+
+	if game_over:
+		return
+
 	clear_piece(cur_piece,cur_x,cur_y)
 
-	if buttons[HARD] and buttons_release_wait[HARD]:
-		buttons_release_wait[HARD] = False
-		until_next_fall=-21*GRAVITY
-	elif buttons[SOFT]:
-		until_next_fall-=SDF
-	else:
-		until_next_fall-=1
-
+	try_dropping()
 	
-	while until_next_fall<=0:
-		until_next_fall+=GRAVITY
-		if can_place_piece(cur_piece,cur_x,cur_y-1):
-			cur_y-=1
-		else:
-			finalize_placement()
+	try_falling()
 
 	place_piece(cur_piece,cur_x,cur_y)
 

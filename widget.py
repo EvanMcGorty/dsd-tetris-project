@@ -34,7 +34,10 @@ class PytrisWidget(Frame):
 
 
 	def run_frame(self):
-		self.after(17,self.run_frame)
+		if framecount%3 == 0:
+			self.after(16,self.run_frame)
+		else:
+			self.after(17,self.run_frame)
 		perform_frame_logic()
 		for y in range(0,len(paint_update_board)):
 			for x in range(0,len(paint_update_board[0])):
