@@ -5,7 +5,7 @@ from logic import*
 
 PIECE_SIZE = 40
 
-COLOR_DICT = {0:"#000",1:"#e21",2:"#04c",3:"#1ec",4:"#8e7",5:"#fc0",6:"#fe2",7:"#b2d"}
+COLOR_DICT = {0:"#000",1:"#e21",2:"#04c",3:"#1ec",4:"#0b3",5:"#f60",6:"#fe2",7:"#b2d"}
 
 class PytrisWidget(Frame):
 
