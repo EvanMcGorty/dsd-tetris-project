@@ -5,4 +5,5 @@ GRAVITY = 24 #Base fall speed, 360/gravity is the number of frames it takes to f
 LOCK_DELAY = 30 #The number of extra frames a piece touching the floor has before locking, resets when it is moved
 ULTIMATE_LOCK_MULTIPLIER = 10 #Multiplier for the amount of lock delay that doesnt reset when the piece is moved
 DISABLE_KICKS = False #Whether to disable kicks that try allow a piece to spin when there isnt room by shifting it
+RANDOMIZER_MODE = "7bag" #Random piece generator options: "random", "classic", "7bag", "14bag"
 COLORBLIND_MODE = False #Changes how block outlines are displayed to make tetris colorblind friendly

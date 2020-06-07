@@ -1,5 +1,4 @@
 from piece_data import*
-from random import choice
 
 
 def construct_piece(ind):

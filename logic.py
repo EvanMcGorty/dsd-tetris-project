@@ -1,4 +1,5 @@
 from piece_operations import*
+from random import choice, shuffle
 
 buttons = []
 for i in range(0,8):
@@ -15,11 +16,34 @@ def check_button_press(i):
 	return False
 
 
+randomizer_data = None
+
+
+def get_next_piece():
+	if RANDOMIZER_MODE == "random":
+		return construct_piece(choice(list(PIECE_INDEX.values())))
+		
+	elif RANDOMIZER_MODE == "classic":
+		tryrandom = choice(list(PIECE_INDEX.values()))
+		if tryrandom!=randomizer_data[0]:
+			randomizer_data = tryrandom
+			return construct_piece(tryrandom)
+		else:
+			randomizer_data = choice(list(PIECE_INDEX.values()))
+			return construct_piece(randomizer_data)
+
+	elif RANDOMIZER_MODE == "7bag":
+		if randomizer_data == None or len(randomizer_data) == 0
+			randomizer_data=shuffle(list(PIECE_INDEX.values()))
+		return randomizer_data.pop()
+	
+	elif RANDOMIZER_MODE == "14bag":
+		if randomizer_data == None or len(randomizer_data) == 0
+			randomizer_data=shuffle(list(PIECE_INDEX.values())+list(PIECE_INDEX.values()))
+		return randomizer_data.pop()
+
 framecount = 0
 
-	
-def get_next_piece():
-	return construct_piece(choice(list(PIECE_INDEX.values())))
 
 cur_piece = None
 cur_x,cur_y = (None,None)
@@ -31,6 +55,7 @@ left_das_countdown = None
 right_das_countdown = None
 cur_move_offset = None
 last_move_direction = None
+
 
 def initialize_next_piece():
 	global cur_piece
