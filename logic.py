@@ -25,7 +25,8 @@ def get_next_piece():
 cur_piece = None
 cur_x,cur_y = (None,None)
 until_next_fall = None
-game_over = False
+game_over = None
+lock_buffer = None
 
 def initialize_next_piece():
 	global cur_piece
@@ -33,17 +34,26 @@ def initialize_next_piece():
 	global cur_y
 	global until_next_fall
 	global game_over
+	global lock_buffer
 	cur_piece = get_next_piece()
 	cur_x,cur_y = PIECE_SPAWN_COORDS[cur_piece[0]]
 	until_next_fall = GRAVITY
+	game_over = False
+	lock_buffer = LOCK_DELAY
 	if not can_place_piece(cur_piece,cur_x,cur_y):
 		game_over = True
 
 initialize_next_piece()
 
 def finalize_placement():
+	global lock_buffer
+	global until_next_fall
+	if lock_buffer==0:
 		place_piece(cur_piece,cur_x,cur_y)
 		initialize_next_piece()
+	else:
+		lock_buffer-=1
+		until_next_fall = 1
 
 def try_dropping():
 	global until_next_fall
@@ -79,19 +89,6 @@ def try_rotate():
 				break
 
 
-
-'''
-def debug_display_keys():
-	curpressed = ""
-	for i in range(0,len(buttons)):
-		if buttons[i]:
-			curpressed+=KEYS[i]+" "
-	print(curpressed)
-def debug_paint_test():
-	global framecount
-	global paint_update_board
-	paint_update_board[framecount%19][framecount%10] = framecount%8
-'''
 
 def perform_frame_logic():
 	global framecount
