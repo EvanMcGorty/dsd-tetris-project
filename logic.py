@@ -9,6 +9,13 @@ buttons_release_wait = []
 for i in range(0,8):
 	buttons_release_wait.append(True)
 
+def check_button_press(i):
+	if buttons[i] and buttons_release_wait[i]:
+		buttons_release_wait[i] = False
+		return True
+	return False
+
+
 framecount = 0
 
 	
@@ -41,8 +48,7 @@ def finalize_placement():
 def try_dropping():
 	global until_next_fall
 
-	if buttons[HARD] and buttons_release_wait[HARD]:
-		buttons_release_wait[HARD] = False
+	if check_button_press(HARD):
 		until_next_fall=-21*GRAVITY
 	elif buttons[SOFT]:
 		until_next_fall-=SDF
@@ -65,6 +71,12 @@ def try_falling():
 def try_rotate():
 	global cur_x
 	global cur_y
+	global cur_piece
+	for i in [ROT90,ROT270,ROT180]:
+		if check_button_press(i):
+			if can_place_piece(rotate_piece(cur_piece,i),cur_x,cur_y):
+				cur_piece = rotate_piece(cur_piece,i)
+				break
 
 
 
@@ -94,6 +106,8 @@ def perform_frame_logic():
 	try_dropping()
 	
 	try_falling()
+
+	try_rotate()
 
 	place_piece(cur_piece,cur_x,cur_y)
 
