@@ -2,7 +2,6 @@ from piece_data import*
 from random import choice
 
 
-
 def construct_piece(ind):
 	return (ind,0)
 
@@ -27,6 +26,15 @@ def index_piece(pieceval,x,y):
 		newx = y
 	return matrix[newy][newx]
 		
+
+def kick_table_index(cur_orientation,rotation,table,attempt):
+	if rotation==ROT180:
+		return (0,0)
+	if rotation==ROT90:
+		return table[cur_orientation][attempt]
+	if rotation==ROT270:
+		(x,y) = table[(cur_orientation+3)%4][attempt]
+		return (-x,-y)
 
 
 board = make_board_matrix(BACKGROUND_TILE)

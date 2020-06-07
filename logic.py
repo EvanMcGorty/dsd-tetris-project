@@ -1,5 +1,4 @@
 from piece_operations import*
-from player_settings import*
 
 buttons = []
 for i in range(0,8):
@@ -163,10 +162,16 @@ def try_rotate():
 	global lock_buffer
 	for i in [ROT90,ROT270,ROT180]:
 		if check_button_press(i):
-			if can_place_piece(rotate_piece(cur_piece,i),cur_x,cur_y):
-				cur_piece = rotate_piece(cur_piece,i)
-				lock_buffer = LOCK_DELAY
-				break
+			for kickind in range(KICK_ATTEMPT_COUNT):
+				(x,y) = kick_table_index(cur_piece[1],i,KICK_LOOKUP[cur_piece[0]],kickind)
+				rotated = rotate_piece(cur_piece,i)
+				if can_place_piece(rotated,cur_x+x,cur_y+y):
+					cur_piece = rotated
+					cur_x+=x
+					cur_y+=y
+					lock_buffer = LOCK_DELAY
+					break
+			return
 
 
 

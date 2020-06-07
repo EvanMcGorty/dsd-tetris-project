@@ -1,3 +1,5 @@
+from editable_player_settings import*
+
 PIECE_INDEX = {'z':1,'j':2,'i':3,'s':4,'l':5,'o':6,'t':7}
 
 PAINT_NOTHING = -1
@@ -78,6 +80,43 @@ oxx
 ooo
 """,PIECE_INDEX['z'])
 }
+
+JLSTZ_KICKS = [
+	[(0,0),(-1,0),(-1,1),(0,-2),(-1,-2)],
+	[(0,0),(1,0),(1,-1),(0,2),(1,2)],
+	[(0,0),(1,0),(1,1),(0,-2),(1,-2)],
+	[(0,0),(-1,0),(-1,-1),(0,2),(-1,2)]
+]
+
+I_KICKS = [
+	[( 0, 0),(-2, 0),(1, 0),(-2,-1),(1,2)],
+	[( 0, 0),(-1, 0),(2, 0),(-1,2),(2,-1)],
+	[( 0, 0),(2, 0),(-1, 0),(2,1),(-1,-2)],
+	[( 0, 0),(1, 0),(-2, 0),(1,-2),(-2,1)]
+]
+
+O_KICKS = [
+	[(0,0),(0,0),(0,0),(0,0),(0,0),],
+	[(0,0),(0,0),(0,0),(0,0),(0,0),],
+	[(0,0),(0,0),(0,0),(0,0),(0,0),],
+	[(0,0),(0,0),(0,0),(0,0),(0,0),]
+]
+
+KICK_ATTEMPT_COUNT = 5
+if DISABLE_KICKS:
+	KICK_ATTEMPT_COUNT = 1
+
+KICK_LOOKUP = {
+	PIECE_INDEX['i']:I_KICKS,
+	PIECE_INDEX['j']:JLSTZ_KICKS,
+	PIECE_INDEX['l']:JLSTZ_KICKS,
+	PIECE_INDEX['o']:O_KICKS,
+	PIECE_INDEX['s']:JLSTZ_KICKS,
+	PIECE_INDEX['t']:JLSTZ_KICKS,
+	PIECE_INDEX['z']:JLSTZ_KICKS
+}
+
+
 
 PIECE_SPAWN_COORDS = {
 	PIECE_INDEX['i']:(3,17),

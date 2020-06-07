@@ -41,14 +41,16 @@ class PytrisWidget(Frame):
 		perform_frame_logic()
 		for y in range(0,len(paint_update_board)):
 			for x in range(0,len(paint_update_board[0])):
-				if paint_update_board[len(paint_update_board)-1-y][x] != PAINT_NOTHING:
+				cur = paint_update_board[len(paint_update_board)-1-y][x]
+				if cur != PAINT_NOTHING:
 					tag = str(x)+' '+str(y)
 					oldelem = self.canvas.find_withtag(tag)
 					if len(oldelem)!=0:
 						self.canvas.delete(oldelem)
 					self.canvas.create_rectangle(
 						x*PIECE_SIZE,y*PIECE_SIZE,(x+1)*PIECE_SIZE,(y+1)*PIECE_SIZE,
-						outline="#fff", fill=COLOR_DICT[paint_update_board[len(paint_update_board)-1-y][x]],
+						outline="#eee", width=0.5*int(not COLORBLIND_MODE)+2*int(COLORBLIND_MODE and cur==BACKGROUND_TILE),
+						fill=COLOR_DICT[cur],
 						tags = (0,tag))
 					paint_update_board[len(paint_update_board)-1-y][x] = PAINT_NOTHING
 
