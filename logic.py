@@ -57,9 +57,11 @@ def finalize_placement():
 
 def try_dropping():
 	global until_next_fall
+	global lock_buffer
 
 	if check_button_press(HARD):
 		until_next_fall=-21*GRAVITY
+		lock_buffer = 0
 	elif buttons[SOFT]:
 		until_next_fall-=SDF
 	else:
