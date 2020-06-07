@@ -1,4 +1,4 @@
-from tkinter import Tk, Canvas, Frame, BOTH
+from tkinter import Tk, Canvas, Frame, BOTH, ALL
 
 from logic import*
 
@@ -33,13 +33,20 @@ class PytrisWidget(Frame):
 
 
 	def run_frame(self):
-		self.after(32,self.run_frame)
+		self.after(17,self.run_frame)
 		perform_frame_logic()
 		for y in range(0,len(paint_update_board)):
 			for x in range(0,len(paint_update_board[0])):
 				if paint_update_board[len(paint_update_board)-1-y][x] != PAINT_NOTHING:
+					tag = str(x)+' '+str(y)
+					oldelem = self.canvas.find_withtag(tag)
+					#oldelem = self.canvas.find_all()
+					if len(oldelem)!=0:
+						print(len(oldelem))
+						self.canvas.delete(oldelem)
 					self.canvas.create_rectangle(
 						x*PIECE_SIZE,y*PIECE_SIZE,(x+1)*PIECE_SIZE,(y+1)*PIECE_SIZE,
-						outline="#fff", fill=COLOR_DICT[paint_update_board[len(paint_update_board)-1-y][x]])
+						outline="#fff", fill=COLOR_DICT[paint_update_board[len(paint_update_board)-1-y][x]],
+						tags = (tag,'test'))
 					paint_update_board[len(paint_update_board)-1-y][x] = PAINT_NOTHING
 
