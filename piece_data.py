@@ -80,13 +80,13 @@ ooo
 }
 
 PIECE_SPAWN_COORDS = {
-	PIECE_INDEX['i']:(3,18),
-	PIECE_INDEX['j']:(3,18),
-	PIECE_INDEX['l']:(3,18),
-	PIECE_INDEX['o']:(4,19),
-	PIECE_INDEX['s']:(3,18),
-	PIECE_INDEX['t']:(3,18),
-	PIECE_INDEX['z']:(3,18)
+	PIECE_INDEX['i']:(3,17),
+	PIECE_INDEX['j']:(3,17),
+	PIECE_INDEX['l']:(3,17),
+	PIECE_INDEX['o']:(4,18),
+	PIECE_INDEX['s']:(3,17),
+	PIECE_INDEX['t']:(3,17),
+	PIECE_INDEX['z']:(3,17)
 }
 
 MATRIX_SIZE = {

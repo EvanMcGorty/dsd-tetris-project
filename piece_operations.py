@@ -8,13 +8,8 @@ paint_update_board = make_board_matrix(BACKGROUND_TILE)
 
 
 def is_occupiable(x,y):
-	if len(board)<=y:
-		return False
-	if len(board[y])<=x:
-		return False
-	if board[y][x] != BACKGROUND_TILE:
-		return False
-	return True
+	return len(board)>y and y>=0 and len(board[y])>x and x>=0 and board[y][x] == BACKGROUND_TILE
+	
 
 def can_place_piece(pieceval,x,y):
 	for ix in range(MATRIX_SIZE[pieceval[0]]):

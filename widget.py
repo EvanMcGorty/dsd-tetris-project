@@ -33,7 +33,7 @@ class PytrisWidget(Frame):
 
 
 	def run_frame(self):
-		self.after(17,self.run_frame)
+		self.after(32,self.run_frame)
 		perform_frame_logic()
 		for y in range(0,len(paint_update_board)):
 			for x in range(0,len(paint_update_board[0])):
