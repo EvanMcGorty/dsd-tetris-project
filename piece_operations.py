@@ -61,4 +61,44 @@ def clear_piece(pieceval,x,y):
 			if cur != BACKGROUND_TILE:
 				board[iy+y][ix+x] = BACKGROUND_TILE
 				paint_update_board[iy+y][ix+x] = BACKGROUND_TILE
+
+def rows_to_clear():
+	ret = []
+	for y in range(len(board)):
+		is_row_clearable = True
+		for x in range(len(board[y])):
+			if board[y][x]==BACKGROUND_TILE:
+				is_row_clearable = False
+				break
+		if is_row_clearable:
+			ret.append(y)
+	return ret
+
+
+def clear_rows():
+	global board
+	rows = rows_to_clear()
+	if len(rows)==0:
+		return
+	newboard = []
+	for y in range(len(board)):
+		newrow = []
+		dist = 0
+		for i in rows:
+			if i<=y+dist:
+				dist+=1
+		if y+dist >=len(board):
+			for i in range(BOARD_WIDTH):
+				newrow.append(BACKGROUND_TILE)
+			newboard.append(newrow)
+			continue
+		for x in range(len(board[y+dist])):
+			if board[y+dist][x]!=board[y][x]:
+				paint_update_board[y][x] = board[y+dist][x]
+			newrow.append(board[y+dist][x])
+		newboard.append(newrow)
+	board = newboard
+			
+
+
 	

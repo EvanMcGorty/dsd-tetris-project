@@ -118,6 +118,7 @@ def finalize_placement():
 	global until_next_fall
 	if lock_buffer==0:
 		place_piece(cur_piece,cur_x,cur_y)
+		clear_rows()
 		initialize_next_piece()
 	else:
 		lock_buffer-=1
