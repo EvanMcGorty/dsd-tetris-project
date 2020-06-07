@@ -27,6 +27,7 @@ cur_x,cur_y = (None,None)
 until_next_fall = None
 game_over = None
 lock_buffer = None
+ultimate_lock_buffer = None
 left_das_countdown = None
 right_das_countdown = None
 cur_move_offset = None
@@ -43,11 +44,13 @@ def initialize_next_piece():
 	global right_das_countdown
 	global cur_move_offset
 	global last_move_direction
+	global ultimate_lock_buffer
 	cur_piece = get_next_piece()
 	cur_x,cur_y = PIECE_SPAWN_COORDS[cur_piece[0]]
 	until_next_fall = GRAVITY
 	game_over = False
 	lock_buffer = LOCK_DELAY
+	ultimate_lock_buffer = LOCK_DELAY*ULTIMATE_LOCK_MULTIPLIER
 	left_das_countdown = DAS
 	right_das_countdown = DAS
 	cur_move_offset = 0
@@ -65,6 +68,7 @@ def move(frame_dist):
 	global cur_y
 	global cur_move_offset
 	global last_move_direction
+	global lock_buffer
 	cur_move_offset+=frame_dist
 	direction = None
 
@@ -82,6 +86,7 @@ def move(frame_dist):
 			cur_x+=direction
 			abs_distance-=ARR
 			cur_move_offset -= ARR*direction
+			lock_buffer = LOCK_DELAY
 		else:
 			abs_distance = 0
 			cur_move_offset = 0
@@ -115,13 +120,15 @@ def manage_lr_movement():
 
 def finalize_placement():
 	global lock_buffer
+	global ultimate_lock_buffer
 	global until_next_fall
-	if lock_buffer==0:
+	if lock_buffer==0 or ultimate_lock_buffer==0:
 		place_piece(cur_piece,cur_x,cur_y)
 		clear_rows()
 		initialize_next_piece()
 	else:
 		lock_buffer-=1
+		ultimate_lock_buffer-=1
 		until_next_fall = 1
 
 def try_dropping():
@@ -153,10 +160,12 @@ def try_rotate():
 	global cur_x
 	global cur_y
 	global cur_piece
+	global lock_buffer
 	for i in [ROT90,ROT270,ROT180]:
 		if check_button_press(i):
 			if can_place_piece(rotate_piece(cur_piece,i),cur_x,cur_y):
 				cur_piece = rotate_piece(cur_piece,i)
+				lock_buffer = LOCK_DELAY
 				break
 
 
