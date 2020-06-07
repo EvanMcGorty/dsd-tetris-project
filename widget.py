@@ -5,7 +5,7 @@ from logic import*
 
 PIECE_SIZE = 40
 
-COLOR_DICT = {0:"#000",1:"#e21",2:"#04c",3:"#1ec",4:"#0b3",5:"#f60",6:"#fe2",7:"#b2d"}
+COLOR_DICT = {-1*int(COLORBLIND_MODE): "#feb", -1*int(not COLORBLIND_MODE):"#000",1:"#e21",2:"#04c",3:"#1ec",4:"#0b3",5:"#f60",6:"#fc0",7:"#b2d"}
 
 class PytrisWidget(Frame):
 
@@ -49,7 +49,7 @@ class PytrisWidget(Frame):
 						self.canvas.delete(oldelem)
 					self.canvas.create_rectangle(
 						x*PIECE_SIZE,y*PIECE_SIZE,(x+1)*PIECE_SIZE,(y+1)*PIECE_SIZE,
-						outline="#eee", width=0.5*int(not COLORBLIND_MODE)+2*int(COLORBLIND_MODE and cur==BACKGROUND_TILE),
+						outline=COLOR_DICT[-1], width=0.5*int(not COLORBLIND_MODE)+2*int(COLORBLIND_MODE and cur==BACKGROUND_TILE),
 						fill=COLOR_DICT[cur],
 						tags = (0,tag))
 					paint_update_board[len(paint_update_board)-1-y][x] = PAINT_NOTHING
