@@ -5,6 +5,10 @@ buttons = []
 for i in range(0,8):
 	buttons.append(False)
 
+buttons_release_wait = []
+for i in range(0,8):
+	buttons_release_wait.append(True)
+
 framecount = 0
 
 	
@@ -30,6 +34,10 @@ def initialize_next_piece():
 
 initialize_next_piece()
 
+def finalize_placement():
+		place_piece(cur_piece,cur_x,cur_y)
+		initialize_next_piece()
+
 
 '''
 def debug_display_keys():
@@ -53,15 +61,24 @@ def perform_frame_logic():
 	global cur_x
 	global cur_y
 	clear_piece(cur_piece,cur_x,cur_y)
-	until_next_fall-=1
+
+	if buttons[HARD] and buttons_release_wait[HARD]:
+		buttons_release_wait[HARD] = False
+		until_next_fall=-21*GRAVITY
+	elif buttons[SOFT]:
+		until_next_fall-=SDF
+	else:
+		until_next_fall-=1
+
+	
 	while until_next_fall<=0:
 		until_next_fall+=GRAVITY
 		if can_place_piece(cur_piece,cur_x,cur_y-1):
 			cur_y-=1
 		else:
-			place_piece(cur_piece,cur_x,cur_y)
-			initialize_next_piece()
+			finalize_placement()
+
 	place_piece(cur_piece,cur_x,cur_y)
 
-
+		
 	framecount+=1

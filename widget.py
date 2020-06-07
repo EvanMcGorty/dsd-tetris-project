@@ -30,6 +30,7 @@ class PytrisWidget(Frame):
 		for i in range(0,len(KEYS)):
 			if keyname.keysym == KEYS[i]:
 				buttons[i] = False
+				buttons_release_wait[i] = True
 
 
 	def run_frame(self):

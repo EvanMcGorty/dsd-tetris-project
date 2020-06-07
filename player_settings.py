@@ -1,4 +1,4 @@
 ARR = 1.5
 DAS = 8
-SDF = 20
-GRAVITY = 10
+SDF = 5
+GRAVITY = 8
