@@ -71,22 +71,24 @@ def move(frame_dist):
 
 	abs_distance = cur_move_offset*direction
 	
-	while abs_distance>=SDF:
+	while abs_distance>=ARR:
 		if can_place_piece(cur_piece,cur_x+direction,cur_y):
 			cur_x+=direction
-			abs_distance-=SDF
-			cur_move_offset -= SDF*direction
+			abs_distance-=ARR
+			cur_move_offset -= ARR*direction
 		else:
 			abs_distance = 0
 			cur_move_offset = 0
 
 def manage_lr_movement():
+	global cur_move_offset
 	global left_das_countdown
 	global right_das_countdown
 	if buttons[LEFT]:
 		if left_das_countdown>0:
 			left_das_countdown-=1
 			if check_button_press(LEFT):
+				cur_move_offset = 0
 				move(-SDF)
 		else:
 			move(-1)
@@ -95,6 +97,7 @@ def manage_lr_movement():
 		if right_das_countdown>0:
 			right_das_countdown-=1
 			if check_button_press(RIGHT):
+				cur_move_offset = 0
 				move(SDF)
 		else:
 			move(1)
