@@ -150,7 +150,7 @@ def try_falling():
 	global cur_y
 
 	while until_next_fall<=0:
-		until_next_fall+=GRAVITY
+		until_next_fall+=360/GRAVITY
 		if can_place_piece(cur_piece,cur_x,cur_y-1):
 			cur_y-=1
 		else:
