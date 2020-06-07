@@ -30,6 +30,7 @@ lock_buffer = None
 left_das_countdown = None
 right_das_countdown = None
 cur_move_offset = None
+last_move_direction = None
 
 def initialize_next_piece():
 	global cur_piece
@@ -41,6 +42,7 @@ def initialize_next_piece():
 	global left_das_countdown
 	global right_das_countdown
 	global cur_move_offset
+	global last_move_direction
 	cur_piece = get_next_piece()
 	cur_x,cur_y = PIECE_SPAWN_COORDS[cur_piece[0]]
 	until_next_fall = GRAVITY
@@ -49,6 +51,7 @@ def initialize_next_piece():
 	left_das_countdown = DAS
 	right_das_countdown = DAS
 	cur_move_offset = 0
+	last_move_direction = 0
 	if not can_place_piece(cur_piece,cur_x,cur_y):
 		game_over = True
 
@@ -61,6 +64,7 @@ def move(frame_dist):
 	global cur_x
 	global cur_y
 	global cur_move_offset
+	global last_move_direction
 	cur_move_offset+=frame_dist
 	direction = None
 
@@ -68,6 +72,8 @@ def move(frame_dist):
 		direction = -1
 	elif cur_move_offset >= 0:
 		direction = 1
+
+	last_move_direction = direction
 
 	abs_distance = cur_move_offset*direction
 	
@@ -90,8 +96,10 @@ def manage_lr_movement():
 			if check_button_press(LEFT):
 				cur_move_offset = 0
 				move(-SDF)
-		else:
+		elif not(buttons[RIGHT] and last_move_direction==1):
 			move(-1)
+	else:
+		left_das_countdown = DAS
 
 	if buttons[RIGHT]:
 		if right_das_countdown>0:
@@ -99,8 +107,10 @@ def manage_lr_movement():
 			if check_button_press(RIGHT):
 				cur_move_offset = 0
 				move(SDF)
-		else:
+		elif not(buttons[LEFT] and last_move_direction==-1):
 			move(1)
+	else:
+		right_das_countdown = DAS
 
 
 def finalize_placement():
