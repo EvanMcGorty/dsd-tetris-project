@@ -154,7 +154,7 @@ def finalize_placement():
 	global lock_buffer
 	global ultimate_lock_buffer
 	global until_next_fall
-	if lock_buffer==0 or ultimate_lock_buffer==0:
+	if lock_buffer<=0 or ultimate_lock_buffer<=0:
 		place_piece(cur_piece,cur_x,cur_y)
 		clear_rows()
 		initialize_next_piece()
