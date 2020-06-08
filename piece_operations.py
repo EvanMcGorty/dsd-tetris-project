@@ -23,7 +23,6 @@ def get_text_display_time():
 def display_message(string):
 	global text_to_display
 	global framecount
-	print(str(string))
 	if text_to_display[1] == framecount:
 		text_to_display = (text_to_display[0]+"\n"+string,framecount)
 	else:
@@ -114,8 +113,7 @@ def clear_rows():
 	global board
 	rows = rows_to_clear()
 	if len(rows)==0:
-		return
-	display_message({1:"single!",2:"double!",3:"triple!",4:"tetris!"}[len(rows)])
+		return 0
 	newboard = []
 	for y in range(len(board)):
 		newrow = []
@@ -134,6 +132,7 @@ def clear_rows():
 			newrow.append(board[y+dist][x])
 		newboard.append(newrow)
 	board = newboard
+	return len(rows)
 			
 
 

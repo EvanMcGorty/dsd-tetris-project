@@ -147,14 +147,28 @@ def manage_lr_movement():
 	else:
 		right_das_countdown = DAS
 
+def check_spins():
+	was_spin = True
+	for (x,y) in [(1,0),(0,1),(-1,0),(0,-1)]:
+		if can_place_piece(cur_piece,cur_x+x,cur_y+y):
+			was_spin = False
+	if was_spin:
+		display_message(PIECE_INDEX_INVERSE[cur_piece[0]]+"-spin")
+
+
+def manage_clear_info(rowcount):
+	if rowcount>0:
+		display_message({1:"single!",2:"double!",3:"triple!",4:"tetris!"}[rowcount])
+
 
 def finalize_placement():
 	global lock_buffer
 	global ultimate_lock_buffer
 	global until_next_fall
 	if lock_buffer<=0 or ultimate_lock_buffer<=0:
+		check_spins()
 		place_piece(cur_piece,cur_x,cur_y)
-		clear_rows()
+		manage_clear_info(clear_rows())
 		initialize_next_piece()
 	else:
 		lock_buffer-=1

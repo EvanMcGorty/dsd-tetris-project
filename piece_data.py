@@ -1,6 +1,7 @@
 from editable_player_settings import*
 
 PIECE_INDEX = {'z':1,'j':2,'i':3,'s':4,'l':5,'o':6,'t':7}
+PIECE_INDEX_INVERSE = {v: k for k, v in PIECE_INDEX.items()}
 
 PAINT_NOTHING = -1
 
