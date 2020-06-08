@@ -158,6 +158,16 @@ def check_spins():
 
 def manage_clear_info(rowcount):
 	if rowcount>0:
+		all_clear = True
+		for row in board:
+			for x in row:
+				if x!=BACKGROUND_TILE:
+					all_clear = False
+					break
+			if not all_clear:
+				break
+		if all_clear:
+			display_message("all clear")
 		display_message({1:"single!",2:"double!",3:"triple!",4:"tetris!"}[rowcount])
 
 
