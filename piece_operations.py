@@ -1,6 +1,9 @@
 from piece_data import*
 
 
+def display_message(string):
+	print(str(string))
+
 def construct_piece(ind):
 	return (ind,0)
 
@@ -87,6 +90,7 @@ def clear_rows():
 	rows = rows_to_clear()
 	if len(rows)==0:
 		return
+	display_message({1:"single!",2:"double!",3:"triple!",4:"tetris!"}[len(rows)])
 	newboard = []
 	for y in range(len(board)):
 		newrow = []

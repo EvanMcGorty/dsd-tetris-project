@@ -20,27 +20,34 @@ randomizer_data = None
 
 
 def get_next_piece():
+	global randomizer_data
+
 	if RANDOMIZER_MODE == "random":
 		return construct_piece(choice(list(PIECE_INDEX.values())))
-		
+
 	elif RANDOMIZER_MODE == "classic":
 		tryrandom = choice(list(PIECE_INDEX.values()))
-		if tryrandom!=randomizer_data[0]:
+		if tryrandom!=randomizer_data:
 			randomizer_data = tryrandom
-			return construct_piece(tryrandom)
+			return construct_piece(randomizer_data)
 		else:
 			randomizer_data = choice(list(PIECE_INDEX.values()))
 			return construct_piece(randomizer_data)
 
 	elif RANDOMIZER_MODE == "7bag":
-		if randomizer_data == None or len(randomizer_data) == 0
-			randomizer_data=shuffle(list(PIECE_INDEX.values()))
-		return randomizer_data.pop()
+		if randomizer_data == None or len(randomizer_data) == 0:
+			randomizer_data=list(PIECE_INDEX.values())
+			shuffle(randomizer_data)
+		return construct_piece(randomizer_data.pop())
 	
 	elif RANDOMIZER_MODE == "14bag":
-		if randomizer_data == None or len(randomizer_data) == 0
-			randomizer_data=shuffle(list(PIECE_INDEX.values())+list(PIECE_INDEX.values()))
-		return randomizer_data.pop()
+		if randomizer_data == None or len(randomizer_data) == 0:
+			randomizer_data=list(PIECE_INDEX.values())+list(PIECE_INDEX.values())
+			shuffle(randomizer_data)
+		return construct_piece(randomizer_data.pop())
+
+
+FRAMES_PER_FALL = 360/GRAVITY
 
 framecount = 0
 
@@ -71,7 +78,7 @@ def initialize_next_piece():
 	global ultimate_lock_buffer
 	cur_piece = get_next_piece()
 	cur_x,cur_y = PIECE_SPAWN_COORDS[cur_piece[0]]
-	until_next_fall = GRAVITY
+	until_next_fall = FRAMES_PER_FALL
 	game_over = False
 	lock_buffer = LOCK_DELAY
 	ultimate_lock_buffer = LOCK_DELAY*ULTIMATE_LOCK_MULTIPLIER
@@ -81,6 +88,7 @@ def initialize_next_piece():
 	last_move_direction = 0
 	if not can_place_piece(cur_piece,cur_x,cur_y):
 		game_over = True
+		display_message("GAME OVER!")
 
 initialize_next_piece()
 
@@ -174,7 +182,7 @@ def try_falling():
 	global cur_y
 
 	while until_next_fall<=0:
-		until_next_fall+=360/GRAVITY
+		until_next_fall+=FRAMES_PER_FALL
 		if can_place_piece(cur_piece,cur_x,cur_y-1):
 			cur_y-=1
 		else:
