@@ -49,8 +49,6 @@ def get_next_piece():
 
 FRAMES_PER_FALL = 360/GRAVITY
 
-framecount = 0
-
 
 cur_piece = None
 cur_x,cur_y = (None,None)
@@ -168,7 +166,7 @@ def try_dropping():
 	global lock_buffer
 
 	if check_button_press(HARD):
-		until_next_fall=-21*GRAVITY
+		until_next_fall=-21*FRAMES_PER_FALL
 		lock_buffer = 0
 	elif buttons[SOFT]:
 		until_next_fall-=SDF
@@ -209,7 +207,6 @@ def try_rotate():
 
 
 def perform_frame_logic():
-	global framecount
 	global cur_x
 	global cur_y
 
@@ -229,4 +226,4 @@ def perform_frame_logic():
 	place_piece(cur_piece,cur_x,cur_y)
 
 		
-	framecount+=1
+	increment_framecount()

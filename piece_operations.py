@@ -1,8 +1,33 @@
 from piece_data import*
 
 
+framecount = 0
+
+def increment_framecount():
+	global framecount
+	framecount+=1
+def get_curframe():
+	return framecount
+
+TEXT_DISPLAY_DURATION = 90
+
+text_to_display = ("",-TEXT_DISPLAY_DURATION)
+
+def get_text_display_string():
+	return text_to_display[0]
+
+def get_text_display_time():
+	return text_to_display[1]
+	
+
 def display_message(string):
+	global text_to_display
+	global framecount
 	print(str(string))
+	if text_to_display[1] == framecount:
+		text_to_display = (text_to_display[0]+"\n"+string,framecount)
+	else:
+		text_to_display = (string,framecount)
 
 def construct_piece(ind):
 	return (ind,0)
