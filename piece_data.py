@@ -5,6 +5,8 @@ PIECE_INDEX_INVERSE = {v: k for k, v in PIECE_INDEX.items()}
 
 PAINT_NOTHING = -1
 
+SHADOW_TILE = 8
+
 BACKGROUND_TILE = 0
 
 (ROT90,ROT270,ROT180,RIGHT,LEFT,SOFT,HARD,HOLD) = [0,1,2,3,4,5,6,7]
@@ -23,14 +25,14 @@ def make_board_matrix(initval):
 	return board
 
 
-def make_matrix(string,color):
+def make_matrix(string):
 	ret = []
 	currow = []
 	for i in string:
 		if i=='o':
-			currow.append(BACKGROUND_TILE)
+			currow.append(False)
 		elif i=='x':
-			currow.append(color)
+			currow.append(True)
 		else:
 			ret.insert(0,currow)
 			currow = []
@@ -44,42 +46,42 @@ oooo
 xxxx
 oooo
 oooo
-""",PIECE_INDEX['i']),
+"""),
 	PIECE_INDEX['j']:make_matrix(
 """\
 xoo
 xxx
 ooo
-""",PIECE_INDEX['j']),
+"""),
 PIECE_INDEX['l']:make_matrix(
 """\
 oox
 xxx
 ooo
-""",PIECE_INDEX['l']),
+"""),
 PIECE_INDEX['o']:make_matrix(
 """\
 xx
 xx
-""",PIECE_INDEX['o']),
+"""),
 PIECE_INDEX['s']:make_matrix(
 """\
 oxx
 xxo
 ooo
-""",PIECE_INDEX['s']),
+"""),
 PIECE_INDEX['t']:make_matrix(
 """\
 oxo
 xxx
 ooo
-""",PIECE_INDEX['t']),
+"""),
 PIECE_INDEX['z']:make_matrix(
 """\
 xxo
 oxx
 ooo
-""",PIECE_INDEX['z'])
+""")
 }
 
 JLSTZ_KICKS = [

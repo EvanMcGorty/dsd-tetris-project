@@ -147,6 +147,28 @@ def manage_lr_movement():
 	else:
 		right_das_countdown = DAS
 
+last_shadow = None
+
+def shadow_on():
+	global last_shadow
+	if DISPLAY_SHADOW:
+		y = 0
+		while can_place_piece(cur_piece,cur_x,cur_y+y):
+			y-=1
+		y+=1
+		place_piece(cur_piece,cur_x,cur_y+y,SHADOW_TILE)
+		last_shadow = (cur_piece,cur_x,cur_y+y)
+		
+
+def shadow_off():
+	global last_shadow
+	if last_shadow == None:
+		return
+	(p,x,y) = last_shadow
+	clear_piece(p,x,y)
+	last_shadow = None
+	
+
 def check_spins():
 	was_spin = True
 	for (x,y) in [(1,0),(0,1),(-1,0),(0,-1)]:
@@ -238,6 +260,7 @@ def perform_frame_logic():
 		return
 
 	clear_piece(cur_piece,cur_x,cur_y)
+	shadow_off()
 
 	manage_lr_movement()
 
@@ -247,6 +270,7 @@ def perform_frame_logic():
 
 	try_rotate()
 
+	shadow_on()
 	place_piece(cur_piece,cur_x,cur_y)
 
 		

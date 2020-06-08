@@ -35,7 +35,9 @@ def rotate_piece(pieceval,rot):
 	turn_count = {ROT90:1,ROT180:2,ROT270:3}[rot]
 	return (pieceval[0],(pieceval[1]+turn_count)%4)
 
-def index_piece(pieceval,x,y):
+def index_piece(pieceval,x,y,blocktype = None):
+	if blocktype==None:
+		blocktype = pieceval[0]
 	rotation = pieceval[1]
 	piece = pieceval[0]
 	matrix = PIECE_MATRICIES[piece]
@@ -50,7 +52,7 @@ def index_piece(pieceval,x,y):
 	if rotation == 3:
 		newy = MATRIX_SIZE[piece]-1-x
 		newx = y
-	return matrix[newy][newx]
+	return {False:BACKGROUND_TILE,True:blocktype}[matrix[newy][newx]]
 		
 
 def kick_table_index(cur_orientation,rotation,table,attempt):
@@ -80,10 +82,12 @@ def can_place_piece(pieceval,x,y):
 					return False
 	return True
 	
-def place_piece(pieceval,x,y):
+def place_piece(pieceval,x,y,blocktype = None):
+	if blocktype==None:
+		blocktype = pieceval[0]
 	for ix in range(MATRIX_SIZE[pieceval[0]]):
 		for iy in range(MATRIX_SIZE[pieceval[0]]):
-			cur = index_piece(pieceval,ix,iy)
+			cur = index_piece(pieceval,ix,iy,blocktype)
 			if cur != BACKGROUND_TILE:
 				board[iy+y][ix+x] = cur
 				paint_update_board[iy+y][ix+x] = cur

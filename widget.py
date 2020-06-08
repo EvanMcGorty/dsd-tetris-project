@@ -5,7 +5,8 @@ from logic import*
 
 PIECE_SIZE = 40
 
-COLOR_DICT = {-1*int(COLORBLIND_MODE): "#feb", -1*int(not COLORBLIND_MODE):"#000",1:"#e21",2:"#04c",3:"#1ec",4:"#0b3",5:"#f60",6:"#fc0",7:"#b2d"}
+COLOR_DICT = {-1*int(COLORBLIND_MODE): "#feb", -1*int(not COLORBLIND_MODE):"#333",1:"#e21",2:"#04c",3:"#1ec",4:"#0b3",5:"#f60",6:"#fc0",7:"#b2d"}
+COLOR_DICT[8] = COLOR_DICT[-1]
 
 class PytrisWidget(Frame):
 
@@ -59,5 +60,6 @@ class PytrisWidget(Frame):
 		if len(oldtext)!=0:
 			self.board_canvas.delete(oldtext)
 		if get_text_display_time()+TEXT_DISPLAY_DURATION>get_curframe():
-			self.board_canvas.create_text(5*PIECE_SIZE,10*PIECE_SIZE,text=get_text_display_string().upper(),font = font.Font(family="bahnschrift",size=PIECE_SIZE,weight="bold"),tag=tag)
+			self.board_canvas.create_text(5*PIECE_SIZE,10*PIECE_SIZE,text=get_text_display_string().upper(),
+			font = font.Font(family="bahnschrift",size=PIECE_SIZE,weight="bold"),fill="#78d",tag=tag)
 
