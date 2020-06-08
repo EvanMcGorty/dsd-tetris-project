@@ -86,7 +86,6 @@ def initialize_next_piece():
 	last_move_direction = 0
 	if not can_place_piece(cur_piece,cur_x,cur_y):
 		game_over = True
-		display_message("GAME OVER!")
 
 initialize_next_piece()
 
@@ -267,6 +266,10 @@ def perform_frame_logic():
 	try_dropping()
 	
 	try_falling()
+
+	if game_over:
+		display_message("GAME OVER!")
+		return
 
 	try_rotate()
 
