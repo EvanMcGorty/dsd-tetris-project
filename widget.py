@@ -3,8 +3,6 @@ from tkinter import Tk, Canvas, Frame, BOTH, ALL, font
 from logic import*
 
 
-COLOR_SCHEME = {-1*int(COLORBLIND_MODE): "#feb", -1*int(not COLORBLIND_MODE):"#333",1:"#e21",2:"#04c",3:"#1ec",4:"#0b3",5:"#f60",6:"#fc0",7:"#b2d"}
-COLOR_SCHEME[8] = COLOR_SCHEME[-1]
 
 class PytrisWidget(Frame,Logic):
 

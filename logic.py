@@ -245,6 +245,10 @@ class Logic(GameState):
 		
 		self.try_falling()
 
+			
+		self.increment_framecount()
+
+		
 		if self.game_over:
 			self.place_piece(self.cur_piece,self.cur_x,self.cur_y)
 			self.display_message("GAME OVER!")
@@ -254,6 +258,3 @@ class Logic(GameState):
 
 		self.shadow_on()
 		self.place_piece(self.cur_piece,self.cur_x,self.cur_y)
-
-			
-		self.increment_framecount()

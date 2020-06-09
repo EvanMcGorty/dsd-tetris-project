@@ -1,4 +1,3 @@
-from editable_player_settings import*
 from piece_data import*
 
 
