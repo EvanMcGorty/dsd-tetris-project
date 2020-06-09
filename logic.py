@@ -246,6 +246,7 @@ class Logic(GameState):
 		self.try_falling()
 
 		if self.game_over:
+			self.place_piece(self.cur_piece,self.cur_x,self.cur_y)
 			self.display_message("GAME OVER!")
 			return
 

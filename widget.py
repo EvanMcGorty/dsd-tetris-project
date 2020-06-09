@@ -3,10 +3,8 @@ from tkinter import Tk, Canvas, Frame, BOTH, ALL, font
 from logic import*
 
 
-PIECE_SIZE = 40
-
-COLOR_DICT = {-1*int(COLORBLIND_MODE): "#feb", -1*int(not COLORBLIND_MODE):"#333",1:"#e21",2:"#04c",3:"#1ec",4:"#0b3",5:"#f60",6:"#fc0",7:"#b2d"}
-COLOR_DICT[8] = COLOR_DICT[-1]
+COLOR_SCHEME = {-1*int(COLORBLIND_MODE): "#feb", -1*int(not COLORBLIND_MODE):"#333",1:"#e21",2:"#04c",3:"#1ec",4:"#0b3",5:"#f60",6:"#fc0",7:"#b2d"}
+COLOR_SCHEME[8] = COLOR_SCHEME[-1]
 
 class PytrisWidget(Frame,Logic):
 
@@ -15,8 +13,8 @@ class PytrisWidget(Frame,Logic):
 		Logic.__init__(self)
 		self.master = master
 		self.pack()
-		master.minsize(10*PIECE_SIZE,20*PIECE_SIZE)
-		self.board_canvas = Canvas(self,width=10*PIECE_SIZE,height=20*PIECE_SIZE)
+		master.minsize(BOARD_WIDTH*PIECE_SIZE,BOARD_HEIGHT*PIECE_SIZE)
+		self.board_canvas = Canvas(self,width=BOARD_WIDTH*PIECE_SIZE,height=BOARD_HEIGHT*PIECE_SIZE)
 		self.board_canvas.pack()
 		self.board_canvas.focus_set()		
 		self.board_canvas.bind('<Key>',self.turn_key_on)
@@ -51,8 +49,8 @@ class PytrisWidget(Frame,Logic):
 						self.board_canvas.delete(oldelem)
 					self.board_canvas.create_rectangle(
 						x*PIECE_SIZE,y*PIECE_SIZE,(x+1)*PIECE_SIZE,(y+1)*PIECE_SIZE,
-						outline=COLOR_DICT[-1], width=0.5*int(not COLORBLIND_MODE)+2*int(COLORBLIND_MODE and cur==BACKGROUND_TILE),
-						fill=COLOR_DICT[cur],
+						outline=COLOR_SCHEME[-1], width=0.5*int(not COLORBLIND_MODE)+2*int(COLORBLIND_MODE and cur==BACKGROUND_TILE),
+						fill=COLOR_SCHEME[cur],
 						tags = (0,tag))
 					self.paint_update_board[len(self.paint_update_board)-1-y][x] = PAINT_NOTHING
 		tag = "messagetext"
@@ -60,6 +58,6 @@ class PytrisWidget(Frame,Logic):
 		if len(oldtext)!=0:
 			self.board_canvas.delete(oldtext)
 		if self.get_text_display_time()+TEXT_DISPLAY_DURATION>self.get_curframe():
-			self.board_canvas.create_text(5*PIECE_SIZE,10*PIECE_SIZE,text=self.get_text_display_string().upper(),
+			self.board_canvas.create_text(BOARD_WIDTH/2*PIECE_SIZE,BOARD_HEIGHT/2*PIECE_SIZE,text=self.get_text_display_string().upper(),
 			font = font.Font(family="bahnschrift",size=PIECE_SIZE,weight="bold"),fill="#78d",tag=tag)
 
