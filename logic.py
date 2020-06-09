@@ -37,6 +37,9 @@ class Logic(GameState):
 
 		self.initialize_next_piece()
 		
+		self.combo_streak = 0
+		self.b2b_streak = 0
+		
 		
 
 	def check_button_press(self,i):
@@ -79,7 +82,8 @@ class Logic(GameState):
 
 	def initialize_next_piece(self):
 		self.cur_piece = self.get_next_piece()
-		self.cur_x,self.cur_y = PIECE_SPAWN_COORDS[self.cur_piece[0]]
+		self.cur_x = BOARD_WIDTH//2-2+BOARD_WIDTH%2
+		self.cur_y = BOARD_HEIGHT-3
 		self.until_next_fall = FRAMES_PER_FALL
 		self.game_over = False
 		self.lock_buffer = LOCK_DELAY
@@ -169,15 +173,18 @@ class Logic(GameState):
 		
 
 	def check_spins(self):
-		was_spin = True
+		ret = True
 		for (x,y) in [(1,0),(0,1),(-1,0),(0,-1)]:
 			if self.can_place_piece(self.cur_piece,self.cur_x+x,self.cur_y+y):
-				was_spin = False
+				ret = False
+		return ret
+
+
+	def manage_clear_info(self,rowcount,was_spin):
 		if was_spin:
 			self.display_message(PIECE_INDEX_INVERSE[self.cur_piece[0]]+"-spin")
+				
 
-
-	def manage_clear_info(self,rowcount):
 		if rowcount>0:
 			all_clear = True
 			for row in self.board:
@@ -189,14 +196,27 @@ class Logic(GameState):
 					break
 			if all_clear:
 				self.display_message("all clear")
-			self.display_message({1:"single!",2:"double!",3:"triple!",4:"tetris!"}[rowcount])
+			
+			self.combo_streak+=1
+			if self.combo_streak>=2:
+				self.display_message("Combo x"+str(self.combo_streak))
 
+			if rowcount==4 or (was_spin and self.cur_piece[0] == PIECE_INDEX['t']):
+				self.b2b_streak+=1
+				if self.b2b_streak>=2:
+					self.display_message("B2B x"+str(self.b2b_streak))
+			else:
+				self.b2b_streak=0
+			
+			self.display_message({1:"single!",2:"double!",3:"triple!",4:"tetris!"}[rowcount])
+		else:
+			self.combo_streak=0
 
 	def finalize_placement(self):
 		if self.lock_buffer<=0 or self.ultimate_lock_buffer<=0:
-			self.check_spins()
+			was_spin = self.check_spins()
 			self.place_piece(self.cur_piece,self.cur_x,self.cur_y)
-			self.manage_clear_info(self.clear_rows())
+			self.manage_clear_info(self.clear_rows(),was_spin)
 			self.initialize_next_piece()
 		else:
 			self.lock_buffer-=1
@@ -206,7 +226,7 @@ class Logic(GameState):
 	def try_dropping(self):
 
 		if self.check_button_press(HARD):
-			self.until_next_fall=-21*FRAMES_PER_FALL
+			self.until_next_fall=-1*BOARD_HEIGHT*FRAMES_PER_FALL
 			self.lock_buffer = 0
 		elif self.buttons[SOFT]:
 			self.until_next_fall-=SDF
