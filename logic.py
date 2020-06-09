@@ -127,7 +127,11 @@ class Logic(GameState):
 					self.cur_move_offset = 0
 					self.move(ARR,-1)
 			elif not(self.buttons[RIGHT] and self.last_move_direction==1):
-				self.move(1,-1)
+				if self.left_das_countdown<0:
+					self.move(1+self.left_das_countdown,-1)
+					self.left_das_countdown = 0
+				else:
+					self.move(1,-1)
 		else:
 			self.left_das_countdown = DAS
 
@@ -138,7 +142,11 @@ class Logic(GameState):
 					self.cur_move_offset = 0
 					self.move(ARR,1)
 			elif not(self.buttons[LEFT] and self.last_move_direction==-1):
-				self.move(1,1)
+				if self.right_das_countdown<0:
+					self.move(1+self.right_das_countdown,1)
+					self.right_das_countdown = 0
+				else:
+					self.move(1,1)
 		else:
 			self.right_das_countdown = DAS
 
