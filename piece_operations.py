@@ -74,8 +74,11 @@ class GameState:
 
 
 	def is_occupiable(self,x,y):
-		return len(self.board)>y and y>=0 and len(self.board[y])>x and x>=0 and self.board[y][x] == BACKGROUND_TILE
-		
+		if ALLOW_PIECES_ABOVE_CEILING:
+			return y>=0 and BOARD_WIDTH>x and x>=0 and (y>=BOARD_HEIGHT or self.board[y][x] == BACKGROUND_TILE)
+		else:
+			return len(self.board)>y and y>=0 and len(self.board[y])>x and x>=0 and self.board[y][x] == BACKGROUND_TILE
+
 
 	def can_place_piece(self,pieceval,x,y):
 		for ix in range(MATRIX_SIZE[pieceval[0]]):
@@ -90,6 +93,8 @@ class GameState:
 			blocktype = pieceval[0]
 		for ix in range(MATRIX_SIZE[pieceval[0]]):
 			for iy in range(MATRIX_SIZE[pieceval[0]]):
+				if y+iy >= BOARD_HEIGHT:
+					continue
 				cur = index_piece(pieceval,ix,iy,blocktype)
 				if cur != BACKGROUND_TILE:
 					self.board[iy+y][ix+x] = cur
@@ -98,6 +103,8 @@ class GameState:
 	def clear_piece(self,pieceval,x,y):
 		for ix in range(MATRIX_SIZE[pieceval[0]]):
 			for iy in range(MATRIX_SIZE[pieceval[0]]):
+				if y+iy >= BOARD_HEIGHT:
+					continue
 				cur = index_piece(pieceval,ix,iy)
 				if cur != BACKGROUND_TILE:
 					self.board[iy+y][ix+x] = BACKGROUND_TILE
