@@ -1,6 +1,6 @@
 from editable_player_settings import*
 from editable_visual_settings import*
-from editable_controls_settings import*
+from editable_keybinds_settings import*
 
 PIECE_INDEX_INVERSE = {v: k for k, v in PIECE_INDEX.items()}
 
