@@ -91,20 +91,20 @@ initialize_next_piece()
 
 
 
-def move(frame_dist):
+def move(frame_dist,direction):
 	global cur_piece
 	global cur_x
 	global cur_y
 	global cur_move_offset
 	global last_move_direction
 	global lock_buffer
-	cur_move_offset+=frame_dist
-	direction = None
+	cur_move_offset+=frame_dist*direction
 
-	if cur_move_offset<0:
-		direction = -1
-	elif cur_move_offset >= 0:
-		direction = 1
+	if not(frame_dist == 0 and ARR == 0):
+		if cur_move_offset<0:
+			direction = -1
+		elif cur_move_offset >= 0:
+			direction = 1
 
 	last_move_direction = direction
 
@@ -119,6 +119,8 @@ def move(frame_dist):
 		else:
 			abs_distance = 0
 			cur_move_offset = 0
+		if frame_dist == 0 or abs_distance == 0:
+			break
 
 def manage_lr_movement():
 	global cur_move_offset
@@ -129,9 +131,9 @@ def manage_lr_movement():
 			left_das_countdown-=1
 			if check_button_press(LEFT):
 				cur_move_offset = 0
-				move(-ARR)
+				move(ARR,-1)
 		elif not(buttons[RIGHT] and last_move_direction==1):
-			move(-1)
+			move(1,-1)
 	else:
 		left_das_countdown = DAS
 
@@ -140,9 +142,9 @@ def manage_lr_movement():
 			right_das_countdown-=1
 			if check_button_press(RIGHT):
 				cur_move_offset = 0
-				move(ARR)
+				move(ARR,1)
 		elif not(buttons[LEFT] and last_move_direction==-1):
-			move(1)
+			move(1,1)
 	else:
 		right_das_countdown = DAS
 
