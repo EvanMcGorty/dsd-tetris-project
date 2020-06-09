@@ -129,7 +129,7 @@ def manage_lr_movement():
 			left_das_countdown-=1
 			if check_button_press(LEFT):
 				cur_move_offset = 0
-				move(-SDF)
+				move(-ARR)
 		elif not(buttons[RIGHT] and last_move_direction==1):
 			move(-1)
 	else:
@@ -140,7 +140,7 @@ def manage_lr_movement():
 			right_das_countdown-=1
 			if check_button_press(RIGHT):
 				cur_move_offset = 0
-				move(SDF)
+				move(ARR)
 		elif not(buttons[LEFT] and last_move_direction==-1):
 			move(1)
 	else:
