@@ -7,4 +7,7 @@ ULTIMATE_LOCK_MULTIPLIER = 10 #Multiplier for the amount of lock delay that does
 DISABLE_KICKS = False #Whether to disable kicks that try allow a piece to spin when there isnt room by shifting it
 RANDOMIZER_MODE = "7bag" #Random piece generator options: "random", "classic", "7bag", "14bag"
 DISPLAY_SHADOW = True #Whether to display a shadow of where a piece would end up were it to be harddropped
+TEXT_DISPLAY_DURATION = 90 #How many frames to display messages such as "tetris!" or "t spin"
 COLORBLIND_MODE = False #Changes how block outlines are displayed to make tetris colorblind friendly
+BOARD_WIDTH = 10 #How many tiles are across the board. Would you really try changing this?
+BOARD_HEIGHT = 20 #How many tiles tall the board is. I suppose this could be a fun challenge?

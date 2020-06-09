@@ -1,282 +1,258 @@
 from piece_operations import*
 from random import choice, shuffle
 
-buttons = []
-for i in range(0,8):
-	buttons.append(False)
-
-buttons_release_wait = []
-for i in range(0,8):
-	buttons_release_wait.append(True)
-
-def check_button_press(i):
-	if buttons[i] and buttons_release_wait[i]:
-		buttons_release_wait[i] = False
-		return True
-	return False
-
-
-randomizer_data = None
-
-
-def get_next_piece():
-	global randomizer_data
-
-	if RANDOMIZER_MODE == "random":
-		return construct_piece(choice(list(PIECE_INDEX.values())))
-
-	elif RANDOMIZER_MODE == "classic":
-		tryrandom = choice(list(PIECE_INDEX.values()))
-		if tryrandom!=randomizer_data:
-			randomizer_data = tryrandom
-			return construct_piece(randomizer_data)
-		else:
-			randomizer_data = choice(list(PIECE_INDEX.values()))
-			return construct_piece(randomizer_data)
-
-	elif RANDOMIZER_MODE == "7bag":
-		if randomizer_data == None or len(randomizer_data) == 0:
-			randomizer_data=list(PIECE_INDEX.values())
-			shuffle(randomizer_data)
-		return construct_piece(randomizer_data.pop())
-	
-	elif RANDOMIZER_MODE == "14bag":
-		if randomizer_data == None or len(randomizer_data) == 0:
-			randomizer_data=list(PIECE_INDEX.values())+list(PIECE_INDEX.values())
-			shuffle(randomizer_data)
-		return construct_piece(randomizer_data.pop())
 
 
 FRAMES_PER_FALL = 360/GRAVITY
 
+class Logic(GameState):
 
-cur_piece = None
-cur_x,cur_y = (None,None)
-until_next_fall = None
-game_over = None
-lock_buffer = None
-ultimate_lock_buffer = None
-left_das_countdown = None
-right_das_countdown = None
-cur_move_offset = None
-last_move_direction = None
+		
+	def __init__(self):
 
+		super().__init__()
 
-def initialize_next_piece():
-	global cur_piece
-	global cur_x
-	global cur_y
-	global until_next_fall
-	global game_over
-	global lock_buffer
-	global left_das_countdown
-	global right_das_countdown
-	global cur_move_offset
-	global last_move_direction
-	global ultimate_lock_buffer
-	cur_piece = get_next_piece()
-	cur_x,cur_y = PIECE_SPAWN_COORDS[cur_piece[0]]
-	until_next_fall = FRAMES_PER_FALL
-	game_over = False
-	lock_buffer = LOCK_DELAY
-	ultimate_lock_buffer = LOCK_DELAY*ULTIMATE_LOCK_MULTIPLIER
-	left_das_countdown = DAS
-	right_das_countdown = DAS
-	cur_move_offset = 0
-	last_move_direction = 0
-	if not can_place_piece(cur_piece,cur_x,cur_y):
-		game_over = True
+		self.cur_piece = None
+		self.cur_x,self.cur_y = (None,None)
+		self.until_next_fall = None
+		self.game_over = None
+		self.lock_buffer = None
+		self.ultimate_lock_buffer = None
+		self.left_das_countdown = None
+		self.right_das_countdown = None
+		self.cur_move_offset = None
+		self.last_move_direction = None
+		self.randomizer_data = None
+		self.last_shadow = None
 
-initialize_next_piece()
+		self.buttons = []
+		self.buttons_release_wait = []
+
+		for i in range(0,8):
+			self.buttons.append(False)
+
+		for i in range(0,8):
+			self.buttons_release_wait.append(True)
 
 
-
-def move(frame_dist,direction):
-	global cur_piece
-	global cur_x
-	global cur_y
-	global cur_move_offset
-	global last_move_direction
-	global lock_buffer
-	cur_move_offset+=frame_dist*direction
-
-	if not(frame_dist == 0 and ARR == 0):
-		if cur_move_offset<0:
-			direction = -1
-		elif cur_move_offset >= 0:
-			direction = 1
-
-	last_move_direction = direction
-
-	abs_distance = cur_move_offset*direction
-	
-	while abs_distance>=ARR:
-		if can_place_piece(cur_piece,cur_x+direction,cur_y):
-			cur_x+=direction
-			abs_distance-=ARR
-			cur_move_offset -= ARR*direction
-			lock_buffer = LOCK_DELAY
-		else:
-			abs_distance = 0
-			cur_move_offset = 0
-		if frame_dist == 0 or abs_distance == 0:
-			break
-
-def manage_lr_movement():
-	global cur_move_offset
-	global left_das_countdown
-	global right_das_countdown
-	if buttons[LEFT]:
-		if left_das_countdown>0:
-			left_das_countdown-=1
-			if check_button_press(LEFT):
-				cur_move_offset = 0
-				move(ARR,-1)
-		elif not(buttons[RIGHT] and last_move_direction==1):
-			move(1,-1)
-	else:
-		left_das_countdown = DAS
-
-	if buttons[RIGHT]:
-		if right_das_countdown>0:
-			right_das_countdown-=1
-			if check_button_press(RIGHT):
-				cur_move_offset = 0
-				move(ARR,1)
-		elif not(buttons[LEFT] and last_move_direction==-1):
-			move(1,1)
-	else:
-		right_das_countdown = DAS
-
-last_shadow = None
-
-def shadow_on():
-	global last_shadow
-	if DISPLAY_SHADOW:
-		y = 0
-		while can_place_piece(cur_piece,cur_x,cur_y+y):
-			y-=1
-		y+=1
-		place_piece(cur_piece,cur_x,cur_y+y,SHADOW_TILE)
-		last_shadow = (cur_piece,cur_x,cur_y+y)
+		self.initialize_next_piece()
+		
 		
 
-def shadow_off():
-	global last_shadow
-	if last_shadow == None:
-		return
-	(p,x,y) = last_shadow
-	clear_piece(p,x,y)
-	last_shadow = None
-	
-
-def check_spins():
-	was_spin = True
-	for (x,y) in [(1,0),(0,1),(-1,0),(0,-1)]:
-		if can_place_piece(cur_piece,cur_x+x,cur_y+y):
-			was_spin = False
-	if was_spin:
-		display_message(PIECE_INDEX_INVERSE[cur_piece[0]]+"-spin")
+	def check_button_press(self,i):
+		if self.buttons[i] and self.buttons_release_wait[i]:
+			self.buttons_release_wait[i] = False
+			return True
+		return False
 
 
-def manage_clear_info(rowcount):
-	if rowcount>0:
-		all_clear = True
-		for row in board:
-			for x in row:
-				if x!=BACKGROUND_TILE:
-					all_clear = False
-					break
-			if not all_clear:
+
+
+	def get_next_piece(self):
+
+		if RANDOMIZER_MODE == "random":
+			return construct_piece(choice(list(PIECE_INDEX.values())))
+
+		elif RANDOMIZER_MODE == "classic":
+			tryrandom = choice(list(PIECE_INDEX.values()))
+			if tryrandom!=self.randomizer_data:
+				self.randomizer_data = tryrandom
+				return construct_piece(self.randomizer_data)
+			else:
+				self.randomizer_data = choice(list(PIECE_INDEX.values()))
+				return construct_piece(self.randomizer_data)
+
+		elif RANDOMIZER_MODE == "7bag":
+			if self.randomizer_data == None or len(self.randomizer_data) == 0:
+				self.randomizer_data=list(PIECE_INDEX.values())
+				shuffle(self.randomizer_data)
+			return construct_piece(self.randomizer_data.pop())
+		
+		elif RANDOMIZER_MODE == "14bag":
+			if self.randomizer_data == None or len(self.randomizer_data) == 0:
+				self.randomizer_data=list(PIECE_INDEX.values())+list(PIECE_INDEX.values())
+				shuffle(self.randomizer_data)
+			return construct_piece(self.randomizer_data.pop())
+
+
+
+
+	def initialize_next_piece(self):
+		self.cur_piece = self.get_next_piece()
+		self.cur_x,self.cur_y = PIECE_SPAWN_COORDS[self.cur_piece[0]]
+		self.until_next_fall = FRAMES_PER_FALL
+		self.game_over = False
+		self.lock_buffer = LOCK_DELAY
+		self.ultimate_lock_buffer = LOCK_DELAY*ULTIMATE_LOCK_MULTIPLIER
+		self.left_das_countdown = DAS
+		self.right_das_countdown = DAS
+		self.cur_move_offset = 0
+		self.last_move_direction = 0
+		if not self.can_place_piece(self.cur_piece,self.cur_x,self.cur_y):
+			self.game_over = True
+
+
+
+
+	def move(self,frame_dist,direction):
+		self.cur_move_offset+=frame_dist*direction
+
+		if not(frame_dist == 0 and ARR == 0):
+			if self.cur_move_offset<0:
+				direction = -1
+			elif self.cur_move_offset >= 0:
+				direction = 1
+
+		self.last_move_direction = direction
+
+		abs_distance = self.cur_move_offset*direction
+		
+		while abs_distance>=ARR:
+			if self.can_place_piece(self.cur_piece,self.cur_x+direction,self.cur_y):
+				self.cur_x+=direction
+				abs_distance-=ARR
+				self.cur_move_offset -= ARR*direction
+				self.lock_buffer = LOCK_DELAY
+			else:
+				abs_distance = 0
+				self.cur_move_offset = 0
+			if frame_dist == 0 or abs_distance == 0:
 				break
-		if all_clear:
-			display_message("all clear")
-		display_message({1:"single!",2:"double!",3:"triple!",4:"tetris!"}[rowcount])
 
-
-def finalize_placement():
-	global lock_buffer
-	global ultimate_lock_buffer
-	global until_next_fall
-	if lock_buffer<=0 or ultimate_lock_buffer<=0:
-		check_spins()
-		place_piece(cur_piece,cur_x,cur_y)
-		manage_clear_info(clear_rows())
-		initialize_next_piece()
-	else:
-		lock_buffer-=1
-		ultimate_lock_buffer-=1
-		until_next_fall = 1
-
-def try_dropping():
-	global until_next_fall
-	global lock_buffer
-
-	if check_button_press(HARD):
-		until_next_fall=-21*FRAMES_PER_FALL
-		lock_buffer = 0
-	elif buttons[SOFT]:
-		until_next_fall-=SDF
-	else:
-		until_next_fall-=1
-
-
-def try_falling():
-	global until_next_fall
-	global cur_x
-	global cur_y
-
-	while until_next_fall<=0:
-		until_next_fall+=FRAMES_PER_FALL
-		if can_place_piece(cur_piece,cur_x,cur_y-1):
-			cur_y-=1
+	def manage_lr_movement(self):
+		if self.buttons[LEFT]:
+			if self.left_das_countdown>0:
+				self.left_das_countdown-=1
+				if self.check_button_press(LEFT):
+					self.cur_move_offset = 0
+					self.move(ARR,-1)
+			elif not(self.buttons[RIGHT] and self.last_move_direction==1):
+				self.move(1,-1)
 		else:
-			finalize_placement()
+			self.left_das_countdown = DAS
 
-def try_rotate():
-	global cur_x
-	global cur_y
-	global cur_piece
-	global lock_buffer
-	for i in [ROT90,ROT270,ROT180]:
-		if check_button_press(i):
-			for kickind in range(KICK_ATTEMPT_COUNT):
-				(x,y) = kick_table_index(cur_piece[1],i,KICK_LOOKUP[cur_piece[0]],kickind)
-				rotated = rotate_piece(cur_piece,i)
-				if can_place_piece(rotated,cur_x+x,cur_y+y):
-					cur_piece = rotated
-					cur_x+=x
-					cur_y+=y
-					lock_buffer = LOCK_DELAY
+		if self.buttons[RIGHT]:
+			if self.right_das_countdown>0:
+				self.right_das_countdown-=1
+				if self.check_button_press(RIGHT):
+					self.cur_move_offset = 0
+					self.move(ARR,1)
+			elif not(self.buttons[LEFT] and self.last_move_direction==-1):
+				self.move(1,1)
+		else:
+			self.right_das_countdown = DAS
+
+	def shadow_on(self):
+		if DISPLAY_SHADOW:
+			y = 0
+			while self.can_place_piece(self.cur_piece,self.cur_x,self.cur_y+y):
+				y-=1
+			y+=1
+			self.place_piece(self.cur_piece,self.cur_x,self.cur_y+y,SHADOW_TILE)
+			self.last_shadow = (self.cur_piece,self.cur_x,self.cur_y+y)
+			
+
+	def shadow_off(self):
+		if self.last_shadow == None:
+			return
+		(p,x,y) = self.last_shadow
+		self.clear_piece(p,x,y)
+		self.last_shadow = None
+		
+
+	def check_spins(self):
+		was_spin = True
+		for (x,y) in [(1,0),(0,1),(-1,0),(0,-1)]:
+			if self.can_place_piece(self.cur_piece,self.cur_x+x,self.cur_y+y):
+				was_spin = False
+		if was_spin:
+			self.display_message(PIECE_INDEX_INVERSE[self.cur_piece[0]]+"-spin")
+
+
+	def manage_clear_info(self,rowcount):
+		if rowcount>0:
+			all_clear = True
+			for row in self.board:
+				for x in row:
+					if x!=BACKGROUND_TILE:
+						all_clear = False
+						break
+				if not all_clear:
 					break
+			if all_clear:
+				self.display_message("all clear")
+			self.display_message({1:"single!",2:"double!",3:"triple!",4:"tetris!"}[rowcount])
+
+
+	def finalize_placement(self):
+		if self.lock_buffer<=0 or self.ultimate_lock_buffer<=0:
+			self.check_spins()
+			self.place_piece(self.cur_piece,self.cur_x,self.cur_y)
+			self.manage_clear_info(self.clear_rows())
+			self.initialize_next_piece()
+		else:
+			self.lock_buffer-=1
+			self.ultimate_lock_buffer-=1
+			self.until_next_fall = 1
+
+	def try_dropping(self):
+
+		if self.check_button_press(HARD):
+			self.until_next_fall=-21*FRAMES_PER_FALL
+			self.lock_buffer = 0
+		elif self.buttons[SOFT]:
+			self.until_next_fall-=SDF
+		else:
+			self.until_next_fall-=1
+
+
+	def try_falling(self):
+
+		while self.until_next_fall<=0:
+			self.until_next_fall+=FRAMES_PER_FALL
+			if self.can_place_piece(self.cur_piece,self.cur_x,self.cur_y-1):
+				self.cur_y-=1
+			else:
+				self.finalize_placement()
+
+	def try_rotate(self):
+		for i in [ROT90,ROT270,ROT180]:
+			if self.check_button_press(i):
+				for kickind in range(KICK_ATTEMPT_COUNT):
+					(x,y) = kick_table_index(self.cur_piece[1],i,KICK_LOOKUP[self.cur_piece[0]],kickind)
+					rotated = rotate_piece(self.cur_piece,i)
+					if self.can_place_piece(rotated,self.cur_x+x,self.cur_y+y):
+						self.cur_piece = rotated
+						self.cur_x+=x
+						self.cur_y+=y
+						self.lock_buffer = LOCK_DELAY
+						break
+				return
+
+
+
+	def perform_frame_logic(self):
+
+		if self.game_over:
 			return
 
+		self.clear_piece(self.cur_piece,self.cur_x,self.cur_y)
+		self.shadow_off()
 
+		self.manage_lr_movement()
 
-def perform_frame_logic():
-	global cur_x
-	global cur_y
-
-	if game_over:
-		return
-
-	clear_piece(cur_piece,cur_x,cur_y)
-	shadow_off()
-
-	manage_lr_movement()
-
-	try_dropping()
-	
-	try_falling()
-
-	if game_over:
-		display_message("GAME OVER!")
-		return
-
-	try_rotate()
-
-	shadow_on()
-	place_piece(cur_piece,cur_x,cur_y)
-
+		self.try_dropping()
 		
-	increment_framecount()
+		self.try_falling()
+
+		if self.game_over:
+			self.display_message("GAME OVER!")
+			return
+
+		self.try_rotate()
+
+		self.shadow_on()
+		self.place_piece(self.cur_piece,self.cur_x,self.cur_y)
+
+			
+		self.increment_framecount()

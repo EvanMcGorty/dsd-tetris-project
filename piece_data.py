@@ -12,8 +12,6 @@ BACKGROUND_TILE = 0
 (ROT90,ROT270,ROT180,RIGHT,LEFT,SOFT,HARD,HOLD) = [0,1,2,3,4,5,6,7]
 KEYS = ['Up','z','a','Right','Left','Down','space','c']
 
-BOARD_WIDTH = 10
-BOARD_HEIGHT = 20
 
 def make_board_matrix(initval):
 	board = []
