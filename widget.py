@@ -59,5 +59,5 @@ class PytrisWidget(Frame,Logic):
 			self.board_canvas.delete(oldtext)
 		if self.get_text_display_time()+TEXT_DISPLAY_DURATION>self.get_curframe():
 			self.board_canvas.create_text(BOARD_WIDTH/2*PIECE_SIZE,BOARD_HEIGHT/2*PIECE_SIZE,text=self.get_text_display_string().upper(),
-			font = font.Font(family="bahnschrift",size=PIECE_SIZE,weight="bold"),fill="#78d",tag=tag)
+			font = font.Font(family="bahnschrift",size=int(PIECE_SIZE*BOARD_WIDTH/10),weight="bold"),fill="#78d",tag=tag)
 
