@@ -1,3 +1,3 @@
 from widget import*
 
-PytrisWidget(master=Tk()).mainloop()
+PytrisWidget(master=tk.Tk()).mainloop()

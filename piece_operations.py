@@ -63,9 +63,11 @@ class GameState:
 	def update_hold_display(self,matrix,piece):
 		found_bottom = -1
 		for y in range(len(matrix)):
+			if found_bottom == -1:
+				for x in matrix[y]:
+					if x:
+						found_bottom = y
 			for x in range(len(matrix[y])):
-				if matrix[y][x] and found_bottom == -1:
-					found_bottom = y
 				if found_bottom != -1 and y-found_bottom<HOLD_DISPLAY_HEIGHT and x<HOLD_DISPLAY_WIDTH:
 					cur = {True:piece,False:BACKGROUND_TILE}[matrix[y][x]]
 					assign_update(cur,self.hold_display,self.hold_display_paint_update,x,y-found_bottom)

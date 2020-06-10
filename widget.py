@@ -1,4 +1,4 @@
-from tkinter import Tk, Canvas, Frame, LEFT, font
+import tkinter as tk
 
 from logic import*
 
@@ -19,18 +19,22 @@ def paint_canvas(canvas,board):
 					tags = (0,tag))
 				board[len(board)-1-y][x] = PAINT_NOTHING
 
-class PytrisWidget(Frame,Logic):
+class PytrisWidget(tk.Frame,Logic):
 
 	def __init__(self, master=None):
-		Frame.__init__(self,master)
+		tk.Frame.__init__(self,master)
 		Logic.__init__(self)
 		self.master = master
 		self.pack()
 		master.minsize(BOARD_WIDTH*PIECE_SIZE,BOARD_HEIGHT*PIECE_SIZE)
-		self.hold_canvas = Canvas(self,width=HOLD_DISPLAY_WIDTH*PIECE_SIZE,height=HOLD_DISPLAY_HEIGHT*PIECE_SIZE)
-		self.hold_canvas.pack()
-		self.board_canvas = Canvas(self,width=BOARD_WIDTH*PIECE_SIZE,height=BOARD_HEIGHT*PIECE_SIZE)
-		self.board_canvas.pack()
+		self.left_panel = tk.Frame(self,width=HOLD_DISPLAY_WIDTH*PIECE_SIZE,height=BOARD_HEIGHT*PIECE_SIZE)
+		self.left_panel.pack(side = tk.LEFT)
+		self.hold_canvas = tk.Canvas(self.left_panel,width=HOLD_DISPLAY_WIDTH*PIECE_SIZE,height=HOLD_DISPLAY_HEIGHT*PIECE_SIZE)
+		self.hold_canvas.pack(side = tk.TOP)
+		self.info_canvas = tk.Canvas(self.left_panel,width=HOLD_DISPLAY_WIDTH*PIECE_SIZE,height=BOARD_HEIGHT*PIECE_SIZE-HOLD_DISPLAY_HEIGHT*PIECE_SIZE)
+		self.info_canvas.pack(side = tk.BOTTOM)
+		self.board_canvas = tk.Canvas(self,width=BOARD_WIDTH*PIECE_SIZE,height=BOARD_HEIGHT*PIECE_SIZE)
+		self.board_canvas.pack(side = tk.RIGHT)
 		self.focus_set()		
 		self.bind('<Key>',self.turn_key_on)
 		self.bind('<KeyRelease>',self.turn_key_off)
@@ -61,7 +65,7 @@ class PytrisWidget(Frame,Logic):
 			self.board_canvas.delete(oldtext)
 		if self.get_text_display_time()+TEXT_DISPLAY_DURATION>self.get_curframe():
 			self.board_canvas.create_text(BOARD_WIDTH/2*PIECE_SIZE,BOARD_HEIGHT/2*PIECE_SIZE,text=self.get_text_display_string().upper(),
-			font = font.Font(family="bahnschrift",size=int(PIECE_SIZE*BOARD_WIDTH/10),weight="bold"),fill="#78d",tag=tag)
+			font = tk.font.Font(family="bahnschrift",size=int(PIECE_SIZE*BOARD_WIDTH/10),weight="bold"),fill="#78d",tag=tag)
 
 	def run_frame(self):
 		if self.framecount%3 == 0:
