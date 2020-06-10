@@ -58,7 +58,7 @@ class PytrisWidget(tk.Frame,Logic):
 		paint_canvas(self.hold_canvas,self.hold_display_paint_update,int(not COLORBLIND_MODE)*0.5,0)
 
 	def paint_board(self):
-		paint_canvas(self.board_canvas,self.paint_update_board,int(not COLORBLIND_MODE)*0.5,int(COLORBLIND_MODE)*2.5)
+		paint_canvas(self.board_canvas,self.paint_update_board,int(not COLORBLIND_MODE)*0.5,0.5+int(COLORBLIND_MODE)*2)
 	
 	def paint_messages(self):
 		tag = "messagetext"
