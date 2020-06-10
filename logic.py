@@ -92,6 +92,7 @@ class Logic(GameState):
 			else:
 				self.cur_piece,self.hold_piece = construct_piece(self.hold_piece),self.cur_piece[0]
 			self.whether_perform_hold = False
+			self.update_hold_display(PIECE_MATRICIES[self.hold_piece],self.hold_piece)
 		else:
 			self.is_hold_depleted = False
 			self.cur_piece = self.get_next_piece()

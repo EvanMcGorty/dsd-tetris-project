@@ -1,4 +1,4 @@
-ARR = 2 #Auto Repeat Rate: How many frames it takes for a piece to move while auto shifting
+ARR = 1.5 #Auto Repeat Rate: How many frames it takes for a piece to move while auto shifting
 DAS = 7 #Delayed Auto Shift: How many frames a direction must be held to begin auto shifting
 SDF = 5 #Soft Drop Multiplier: Fall speed mulitplier when soft dropping
 GRAVITY = 24 #Base fall speed, 360/gravity is the number of frames it takes to fall once

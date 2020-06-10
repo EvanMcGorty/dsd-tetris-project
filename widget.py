@@ -3,6 +3,21 @@ from tkinter import Tk, Canvas, Frame, LEFT, font
 from logic import*
 
 
+def paint_canvas(canvas,board):
+	for y in range(0,len(board)):
+		for x in range(0,len(board[y])):
+			cur = board[len(board)-1-y][x]
+			if cur != PAINT_NOTHING:
+				tag = str(x)+' '+str(y)
+				oldelem = canvas.find_withtag(tag)
+				if len(oldelem)!=0:
+					canvas.delete(oldelem)
+				canvas.create_rectangle(
+					x*PIECE_SIZE,y*PIECE_SIZE,(x+1)*PIECE_SIZE,(y+1)*PIECE_SIZE,
+					outline=COLOR_SCHEME[-1], width=0.5*int(not COLORBLIND_MODE)+2*int(COLORBLIND_MODE and cur==BACKGROUND_TILE),
+					fill=COLOR_SCHEME[cur],
+					tags = (0,tag))
+				board[len(board)-1-y][x] = PAINT_NOTHING
 
 class PytrisWidget(Frame,Logic):
 
@@ -12,6 +27,8 @@ class PytrisWidget(Frame,Logic):
 		self.master = master
 		self.pack()
 		master.minsize(BOARD_WIDTH*PIECE_SIZE,BOARD_HEIGHT*PIECE_SIZE)
+		self.hold_canvas = Canvas(self,width=HOLD_DISPLAY_WIDTH*PIECE_SIZE,height=HOLD_DISPLAY_HEIGHT*PIECE_SIZE)
+		self.hold_canvas.pack()
 		self.board_canvas = Canvas(self,width=BOARD_WIDTH*PIECE_SIZE,height=BOARD_HEIGHT*PIECE_SIZE)
 		self.board_canvas.pack()
 		self.focus_set()		
@@ -30,21 +47,12 @@ class PytrisWidget(Frame,Logic):
 				self.buttons[i] = False
 				self.buttons_release_wait[i] = True
 
+
+	def paint_hold(self):
+		paint_canvas(self.hold_canvas,self.hold_display_paint_update)
+
 	def paint_board(self):
-		for y in range(0,len(self.paint_update_board)):
-			for x in range(0,len(self.paint_update_board[0])):
-				cur = self.paint_update_board[len(self.paint_update_board)-1-y][x]
-				if cur != PAINT_NOTHING:
-					tag = str(x)+' '+str(y)
-					oldelem = self.board_canvas.find_withtag(tag)
-					if len(oldelem)!=0:
-						self.board_canvas.delete(oldelem)
-					self.board_canvas.create_rectangle(
-						x*PIECE_SIZE,y*PIECE_SIZE,(x+1)*PIECE_SIZE,(y+1)*PIECE_SIZE,
-						outline=COLOR_SCHEME[-1], width=0.5*int(not COLORBLIND_MODE)+2*int(COLORBLIND_MODE and cur==BACKGROUND_TILE),
-						fill=COLOR_SCHEME[cur],
-						tags = (0,tag))
-					self.paint_update_board[len(self.paint_update_board)-1-y][x] = PAINT_NOTHING
+		paint_canvas(self.board_canvas,self.paint_update_board)
 	
 	def paint_messages(self):
 		tag = "messagetext"
@@ -61,6 +69,7 @@ class PytrisWidget(Frame,Logic):
 		else:
 			self.after(17,self.run_frame)
 		self.perform_frame_logic()
+		self.paint_hold()
 		self.paint_board()
 		self.paint_messages()
 

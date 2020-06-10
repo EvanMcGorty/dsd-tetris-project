@@ -10,11 +10,11 @@ PAINT_NOTHING = -2
 KEYS = [RotateClockwise,RotateCounterockwise,Rotate180,MoveRight,MoveLeft,SoftDrop,HardDrop,HoldPiece]
 
 
-def make_board_matrix(initval):
+def make_board_matrix(initval,width,height):
 	board = []
-	for y in range(0,BOARD_HEIGHT):
+	for y in range(0,height):
 		nextrow = []
-		for x in range(0,BOARD_WIDTH):
+		for x in range(0,width):
 			nextrow.append(initval)
 		board.append(nextrow)
 	return board

@@ -40,6 +40,11 @@ def kick_table_index(cur_orientation,rotation,table,attempt):
 
 
 
+def assign_update(val,raw,update,x,y):
+	if val != raw[y][x]:
+		raw[y][x] = val
+		update[y][x] = val
+
 class GameState:
 
 
@@ -47,11 +52,28 @@ class GameState:
 		self.framecount = 0
 		self.text_to_display = ("",-TEXT_DISPLAY_DURATION)
 		
-		self.board = make_board_matrix(BACKGROUND_TILE)
+		self.board = make_board_matrix(BACKGROUND_TILE,BOARD_WIDTH,BOARD_HEIGHT)
 
-		self.paint_update_board = make_board_matrix(BACKGROUND_TILE)
+		self.paint_update_board = make_board_matrix(BACKGROUND_TILE,BOARD_WIDTH,BOARD_HEIGHT)
+
+		self.hold_display = make_board_matrix(BACKGROUND_TILE,HOLD_DISPLAY_WIDTH,HOLD_DISPLAY_HEIGHT)
+		self.hold_display_paint_update = make_board_matrix(BACKGROUND_TILE,HOLD_DISPLAY_WIDTH,HOLD_DISPLAY_HEIGHT)
 
 
+	def update_hold_display(self,matrix,piece):
+		found_bottom = -1
+		for y in range(len(matrix)):
+			for x in range(len(matrix[y])):
+				if matrix[y][x] and found_bottom == -1:
+					found_bottom = y
+				if found_bottom != -1 and y-found_bottom<HOLD_DISPLAY_HEIGHT and x<HOLD_DISPLAY_WIDTH:
+					cur = {True:piece,False:BACKGROUND_TILE}[matrix[y][x]]
+					assign_update(cur,self.hold_display,self.hold_display_paint_update,x,y-found_bottom)
+			for x in range(len(matrix[y]),HOLD_DISPLAY_WIDTH):
+				assign_update(BACKGROUND_TILE,self.hold_display,self.hold_display_paint_update,x,y-found_bottom)
+		for y in range(len(matrix),HOLD_DISPLAY_HEIGHT):
+			for x in range(HOLD_DISPLAY_WIDTH):
+				assign_update(BACKGROUND_TILE,self.hold_display,self.hold_display_paint_update,x,y-found_bottom)
 
 
 	def increment_framecount(self):
