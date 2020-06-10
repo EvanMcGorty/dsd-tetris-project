@@ -4,7 +4,7 @@ import tkinter.font
 from logic import*
 
 
-def paint_canvas(canvas,board):
+def paint_canvas(canvas,board,piecegridwidth,gridwidth):
 	for y in range(0,len(board)):
 		for x in range(0,len(board[y])):
 			cur = board[len(board)-1-y][x]
@@ -15,7 +15,8 @@ def paint_canvas(canvas,board):
 					canvas.delete(oldelem)
 				canvas.create_rectangle(
 					x*PIECE_SIZE,y*PIECE_SIZE,(x+1)*PIECE_SIZE,(y+1)*PIECE_SIZE,
-					outline=COLOR_SCHEME[-1], width=0.5*int(not COLORBLIND_MODE)+2*int(COLORBLIND_MODE and cur==BACKGROUND_TILE),
+					outline=COLOR_SCHEME[-1],
+					width=piecegridwidth*int(cur!=BACKGROUND_TILE)+gridwidth*int(cur==BACKGROUND_TILE),
 					fill=COLOR_SCHEME[cur],
 					tags = (0,tag))
 				board[len(board)-1-y][x] = PAINT_NOTHING
@@ -54,10 +55,10 @@ class PytrisWidget(tk.Frame,Logic):
 
 
 	def paint_hold(self):
-		paint_canvas(self.hold_canvas,self.hold_display_paint_update)
+		paint_canvas(self.hold_canvas,self.hold_display_paint_update,int(not COLORBLIND_MODE)*0.5,0)
 
 	def paint_board(self):
-		paint_canvas(self.board_canvas,self.paint_update_board)
+		paint_canvas(self.board_canvas,self.paint_update_board,int(not COLORBLIND_MODE)*0.5,int(COLORBLIND_MODE)*2.5)
 	
 	def paint_messages(self):
 		tag = "messagetext"
