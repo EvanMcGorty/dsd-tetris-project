@@ -45,6 +45,9 @@ def assign_update(val,raw,update,x,y):
 		raw[y][x] = val
 		update[y][x] = val
 
+def make_piece_display():
+	return (make_board_matrix(BACKGROUND_TILE,PIECE_DISPLAY_WIDTH,PIECE_DISPLAY_HEIGHT),make_board_matrix(BACKGROUND_TILE,PIECE_DISPLAY_WIDTH,PIECE_DISPLAY_HEIGHT))
+
 class GameState:
 
 
@@ -56,11 +59,14 @@ class GameState:
 
 		self.paint_update_board = make_board_matrix(BACKGROUND_TILE,BOARD_WIDTH,BOARD_HEIGHT)
 
-		self.hold_display = make_board_matrix(BACKGROUND_TILE,HOLD_DISPLAY_WIDTH,HOLD_DISPLAY_HEIGHT)
-		self.hold_display_paint_update = make_board_matrix(BACKGROUND_TILE,HOLD_DISPLAY_WIDTH,HOLD_DISPLAY_HEIGHT)
+		self.hold_display = make_piece_display()
+
+		self.next_pieces_display = []
+		for i in range(NEXT_PIECES):
+			self.next_pieces_display.append(make_piece_display())
 
 
-	def update_hold_display(self,matrix,piece):
+	def update_piece_display(self,matrix,piece,display):
 		found_bottom = -1
 		for y in range(len(matrix)):
 			if found_bottom == -1:
@@ -68,14 +74,18 @@ class GameState:
 					if x:
 						found_bottom = y
 			for x in range(len(matrix[y])):
-				if found_bottom != -1 and y-found_bottom<HOLD_DISPLAY_HEIGHT and x<HOLD_DISPLAY_WIDTH:
+				if found_bottom != -1 and y-found_bottom<PIECE_DISPLAY_HEIGHT and x<PIECE_DISPLAY_WIDTH:
 					cur = {True:piece,False:BACKGROUND_TILE}[matrix[y][x]]
-					assign_update(cur,self.hold_display,self.hold_display_paint_update,x,y-found_bottom)
-			for x in range(len(matrix[y]),HOLD_DISPLAY_WIDTH):
-				assign_update(BACKGROUND_TILE,self.hold_display,self.hold_display_paint_update,x,y-found_bottom)
-		for y in range(len(matrix),HOLD_DISPLAY_HEIGHT):
-			for x in range(HOLD_DISPLAY_WIDTH):
-				assign_update(BACKGROUND_TILE,self.hold_display,self.hold_display_paint_update,x,y-found_bottom)
+					assign_update(cur,display[0],display[1],x,y-found_bottom)
+			for x in range(len(matrix[y]),PIECE_DISPLAY_WIDTH):
+				assign_update(BACKGROUND_TILE,display[0],display[1],x,y-found_bottom)
+		for y in range(len(matrix),PIECE_DISPLAY_HEIGHT):
+			for x in range(PIECE_DISPLAY_WIDTH):
+				assign_update(BACKGROUND_TILE,display[0],display[1],x,y-found_bottom)
+
+
+	def update_hold_display(self,matrix,piece):
+		self.update_piece_display(matrix,piece,self.hold_display)
 
 
 	def increment_framecount(self):

@@ -9,3 +9,4 @@ ALLOW_PIECES_ABOVE_CEILING = True #Whether to treat space above the ceiling as o
 RANDOMIZER_MODE = "7bag" #Random piece generator options: "random", "classic", "7bag", "14bag"
 BOARD_WIDTH = 10 #How many tiles are across the board. Would you really try changing this?
 BOARD_HEIGHT = 20 #How many tiles tall the board is. I suppose this could be a fun challenge?
+NEXT_PIECES = 5 #How many next pieces are displayed to the right of the board

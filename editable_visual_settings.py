@@ -3,8 +3,8 @@ TEXT_DISPLAY_DURATION = 90 #How many frames to display messages such as "tetris!
 COLORBLIND_MODE = False #Changes how block outlines are displayed to make tetris colorblind friendly
 DARKMODE = COLORBLIND_MODE #Whether to invert light and dark colors
 PIECE_SIZE = 40 #The Display size for pieces.
-HOLD_DISPLAY_WIDTH = 4
-HOLD_DISPLAY_HEIGHT = 2
+PIECE_DISPLAY_WIDTH = 4
+PIECE_DISPLAY_HEIGHT = 2
 
 
 SHADOW_TILE = -1 #Used in the color scheme

@@ -27,6 +27,7 @@ class Logic(GameState):
 		self.hold_piece = None
 		self.is_hold_depleted = False
 		self.whether_perform_hold = False
+		self.next_pieces_buffer = []
 
 		self.buttons = []
 		self.buttons_release_wait = []
@@ -54,7 +55,7 @@ class Logic(GameState):
 
 
 
-	def get_next_piece(self):
+	def generate_next_piece(self):
 
 		if RANDOMIZER_MODE == "random":
 			return construct_piece(choice(list(PIECE_INDEX.values())))
@@ -81,7 +82,13 @@ class Logic(GameState):
 			return construct_piece(self.randomizer_data.pop())
 
 
-
+	def get_next_piece(self):
+		while len(self.next_pieces_buffer)<=NEXT_PIECES:
+			self.next_pieces_buffer.insert(0,self.generate_next_piece())
+		ret = self.next_pieces_buffer.pop()
+		for i in range(len(self.next_pieces_display)):
+			self.update_piece_display(PIECE_MATRICIES[self.next_pieces_buffer[i][0]],self.next_pieces_buffer[i][0],self.next_pieces_display[i])
+		return ret
 
 	def initialize_next_piece(self):
 		if self.whether_perform_hold == True:
