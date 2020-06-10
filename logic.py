@@ -24,6 +24,9 @@ class Logic(GameState):
 		self.last_move_direction = None
 		self.randomizer_data = None
 		self.last_shadow = None
+		self.hold_piece = None
+		self.is_hold_depleted = False
+		self.whether_perform_hold = False
 
 		self.buttons = []
 		self.buttons_release_wait = []
@@ -81,7 +84,18 @@ class Logic(GameState):
 
 
 	def initialize_next_piece(self):
-		self.cur_piece = self.get_next_piece()
+		if self.whether_perform_hold == True:
+			self.is_hold_depleted = True
+			if self.hold_piece == None:
+				self.hold_piece = self.cur_piece[0]
+				self.cur_piece = self.get_next_piece()
+			else:
+				self.cur_piece,self.hold_piece = construct_piece(self.hold_piece),self.cur_piece[0]
+			self.whether_perform_hold = False
+		else:
+			self.is_hold_depleted = False
+			self.cur_piece = self.get_next_piece()
+
 		self.cur_x = BOARD_WIDTH//2-2+BOARD_WIDTH%2
 		self.cur_y = BOARD_HEIGHT-3
 		self.until_next_fall = FRAMES_PER_FALL
@@ -235,13 +249,22 @@ class Logic(GameState):
 
 
 	def try_falling(self):
-
 		while self.until_next_fall<=0:
 			self.until_next_fall+=FRAMES_PER_FALL
 			if self.can_place_piece(self.cur_piece,self.cur_x,self.cur_y-1):
 				self.cur_y-=1
 			else:
 				self.finalize_placement()
+	
+	def try_hold(self):
+		if self.is_hold_depleted or not self.check_button_press(HOLD):
+			return
+		else:
+			self.whether_perform_hold = True
+			self.initialize_next_piece()
+
+
+
 
 	def try_rotate(self):
 		for i in [ROT90,ROT270,ROT180]:
@@ -281,6 +304,8 @@ class Logic(GameState):
 			self.place_piece(self.cur_piece,self.cur_x,self.cur_y)
 			self.display_message("GAME OVER!")
 			return
+
+		self.try_hold()
 
 		self.try_rotate()
 

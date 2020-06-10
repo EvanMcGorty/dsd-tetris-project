@@ -61,6 +61,6 @@ class PytrisWidget(Frame,Logic):
 		else:
 			self.after(17,self.run_frame)
 		self.perform_frame_logic()
-		self.paint_update_board()
+		self.paint_board()
 		self.paint_messages()
 
