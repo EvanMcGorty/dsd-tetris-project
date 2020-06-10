@@ -37,13 +37,15 @@ class PytrisWidget(tk.Frame,Logic):
 		self.info_canvas.pack(side = tk.BOTTOM)
 		self.board_canvas = tk.Canvas(self,width=BOARD_WIDTH*PIECE_SIZE,height=BOARD_HEIGHT*PIECE_SIZE)
 		self.board_canvas.pack(side = tk.LEFT)
-		self.right_panel = tk.Frame(self,width=PIECE_DISPLAY_WIDTH*PIECE_SIZE,height=PIECE_DISPLAY_HEIGHT*PIECE_SIZE*NEXT_PIECES)
+		self.right_panel = tk.Frame(self,width=PIECE_DISPLAY_WIDTH*PIECE_SIZE,height=BOARD_HEIGHT*PIECE_SIZE)
 		self.right_panel.pack(side = tk.LEFT)
-		self.next_pieces_canvas = []
+		self.next_pieces_frame = tk.Frame(self.right_panel,width=PIECE_DISPLAY_WIDTH*PIECE_SIZE,height=PIECE_DISPLAY_HEIGHT*PIECE_SIZE*NEXT_PIECES)
+		self.next_pieces_frame.pack(side = tk.BOTTOM)
+		self.next_piece_canvases = []
 		for i in range(NEXT_PIECES):
 			cur = tk.Canvas(self.right_panel,width=PIECE_DISPLAY_WIDTH*PIECE_SIZE,height=PIECE_DISPLAY_HEIGHT*PIECE_SIZE)
 			cur.pack(side = tk.BOTTOM)
-			self.next_pieces_canvas.append(cur)
+			self.next_piece_canvases.append(cur)
 		self.focus_set()		
 		self.bind('<Key>',self.turn_key_on)
 		self.bind('<KeyRelease>',self.turn_key_off)
@@ -67,8 +69,8 @@ class PytrisWidget(tk.Frame,Logic):
 		paint_canvas(self.board_canvas,self.paint_update_board,int(not COLORBLIND_MODE)*0.5,0.5+int(COLORBLIND_MODE)*2)
 
 	def paint_next_pieces(self):
-		for i in range(len(self.next_pieces_canvas)):
-			paint_canvas(self.next_pieces_canvas[i],self.next_pieces_display[i][1],int(not COLORBLIND_MODE)*0.5,0)
+		for i in range(len(self.next_piece_canvases)):
+			paint_canvas(self.next_piece_canvases[i],self.next_pieces_display[i][1],int(not COLORBLIND_MODE)*0.5,0)
 	
 	def paint_messages(self):
 		tag = "messagetext"
