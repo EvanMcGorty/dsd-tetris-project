@@ -351,6 +351,8 @@ class GameLogic(GameState):
 		ret+="Time: "
 		if self.framecount>=60*60:
 			ret+=str(self.framecount//(60*60)) + ":"
+		if self.framecount%(60*60)/60<10:
+			ret+="0"
 		ret+=str(int((self.framecount%(60*60))/6)/10) + "\n"
 		ret+="Lines: " + str(self.linecount)
 		return ret
