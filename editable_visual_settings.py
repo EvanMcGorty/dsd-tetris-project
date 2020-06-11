@@ -5,7 +5,8 @@ DARKMODE = COLORBLIND_MODE #Whether to invert light and dark colors
 PIECE_SIZE = 40 #The Display size for pieces.
 PIECE_DISPLAY_WIDTH = 4 #How many tiles wide a piece display is
 PIECE_DISPLAY_HEIGHT = 2 #How many tiles tall a piece display is
-
+MESSAGE_COLOR = "#78d"
+TEXT_COLOR = "#000"
 
 SHADOW_TILE = -1 #Used in the color scheme
 BACKGROUND_TILE = 0 #Used in the color scheme

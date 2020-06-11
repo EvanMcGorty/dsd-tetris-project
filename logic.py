@@ -9,7 +9,7 @@ class GameLogic(GameState):
 	def __init__(self,rng,keybinds):
 
 		super().__init__()
-		
+		self.linecount = 0
 		self.rng = rng
 		self.keybinds = keybinds
 		self.cur_piece = None
@@ -206,6 +206,7 @@ class GameLogic(GameState):
 	def manage_clear_info(self,rowcount,was_spin):
 		if was_spin:
 			self.display_message(PIECE_INDEX_INVERSE[self.cur_piece[0]]+"-spin")
+		self.linecount+=rowcount
 				
 
 		if rowcount>0:
@@ -306,7 +307,7 @@ class GameLogic(GameState):
 		self.try_falling()
 
 			
-		self.increment_framecount()
+		self.framecount+=1
 
 		
 		if self.game_over:
@@ -321,3 +322,10 @@ class GameLogic(GameState):
 
 		self.shadow_on()
 		self.place_piece(self.cur_piece,self.cur_x,self.cur_y)
+
+
+	def get_info_string(self):
+		ret = ""
+		ret+="Time: " + str(int(self.framecount/6)/10) + "\n"
+		ret+="Lines: " + str(self.linecount)
+		return ret

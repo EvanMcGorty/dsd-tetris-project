@@ -211,11 +211,6 @@ class GameState:
 			self.next_pieces_display.append(make_piece_display())
 
 
-	def increment_framecount(self):
-		self.framecount+=1
-	def get_curframe(self):
-		return self.framecount
-
 	def get_text_display_string(self):
 		return self.text_to_display[0]
 
