@@ -317,7 +317,8 @@ class Logic(GameState):
 			self.display_message("GAME OVER!")
 			return
 
-		self.try_hold()
+		if PIECE_HOLDS:
+			self.try_hold()
 
 		self.try_rotate()
 

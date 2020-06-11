@@ -43,27 +43,29 @@ class PytrisWidget(tk.Frame,Logic):
 
 		self.configure(width = left_width+middle_width+right_width,height=largest_height)
 
-		self.left_panel = tk.Frame(self,width=left_width,height=largest_height)
-		self.left_panel.grid(row=0,column=0,sticky=tk.N)
-		self.hold_canvas = tk.Canvas(self.left_panel,width=piece_display_width,height=piece_display_height)
-		self.hold_canvas.grid(row=0,column=0)
-		self.left_info_canvas = tk.Canvas(self.left_panel,width=left_width,height=left_info_height)
-		self.left_info_canvas.grid(row=1,column=0)
+		if PIECE_HOLDS:
+			self.left_panel = tk.Frame(self,width=left_width,height=largest_height)
+			self.left_panel.grid(row=0,column=0,sticky=tk.N)
+			self.hold_canvas = tk.Canvas(self.left_panel,width=piece_display_width,height=piece_display_height)
+			self.hold_canvas.grid(row=0,column=0)
+			self.left_info_canvas = tk.Canvas(self.left_panel,width=left_width,height=left_info_height)
+			self.left_info_canvas.grid(row=1,column=0)
 
 		self.board_canvas = tk.Canvas(self,width=middle_width,height=largest_height)
 		self.board_canvas.grid(row=0,column=1,sticky=tk.N)
 
-		self.right_panel = tk.Frame(self,width=right_width,height=largest_height)
-		self.right_panel.grid(row=0,column=2,sticky=tk.N)
-		self.next_pieces_frame = tk.Frame(self.right_panel,width=next_pieces_width,height=next_pieces_height)
-		self.next_pieces_frame.grid(row=0,column=0)
-		self.right_info_canvas = tk.Canvas(self.right_panel,width=right_width,height=right_info_height)
-		self.right_info_canvas.grid(row=1,column=0)
-		self.next_piece_canvases = []
-		for i in range(NEXT_PIECES):
-			cur = tk.Canvas(self.next_pieces_frame,width=piece_display_width,height=piece_display_height)
-			cur.grid(row=NEXT_PIECES-1-i,column=0)
-			self.next_piece_canvases.append(cur)
+		if NEXT_PIECES>0:
+			self.right_panel = tk.Frame(self,width=right_width,height=largest_height)
+			self.right_panel.grid(row=0,column=2,sticky=tk.N)
+			self.next_pieces_frame = tk.Frame(self.right_panel,width=next_pieces_width,height=next_pieces_height)
+			self.next_pieces_frame.grid(row=0,column=0)
+			self.right_info_canvas = tk.Canvas(self.right_panel,width=right_width,height=right_info_height)
+			self.right_info_canvas.grid(row=1,column=0)
+			self.next_piece_canvases = []
+			for i in range(NEXT_PIECES):
+				cur = tk.Canvas(self.next_pieces_frame,width=piece_display_width,height=piece_display_height)
+				cur.grid(row=NEXT_PIECES-1-i,column=0)
+				self.next_piece_canvases.append(cur)
 
 		self.bind('<Key>',self.turn_key_on)
 		self.bind('<KeyRelease>',self.turn_key_off)
@@ -105,8 +107,10 @@ class PytrisWidget(tk.Frame,Logic):
 		else:
 			self.after(17,self.run_frame)
 		self.perform_frame_logic()
-		self.paint_hold()
 		self.paint_board()
 		self.paint_messages()
-		self.paint_next_pieces()
+		if PIECE_HOLDS:
+			self.paint_hold()
+		if NEXT_PIECES>0:
+			self.paint_next_pieces()
 

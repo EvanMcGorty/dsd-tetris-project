@@ -10,3 +10,4 @@ RANDOMIZER_MODE = "7bag" #Random piece generator options: "random", "classic", "
 BOARD_WIDTH = 10 #How many tiles are across the board. Would you really try changing this?
 BOARD_HEIGHT = 20 #How many tiles tall the board is. I suppose this could be a fun challenge?
 NEXT_PIECES = 5 #How many next pieces are displayed to the right of the board
+PIECE_HOLDS = True #Whether to enable holds, which let you store a piece for later
