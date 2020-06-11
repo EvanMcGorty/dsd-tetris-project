@@ -51,13 +51,13 @@ class PytrisWidget(tk.Frame,Logic):
 		self.run_frame()
 
 	def turn_key_on(self,keyname):
-		for i in range(0,len(KEYS)):
-			if keyname.keysym == KEYS[i]:
+		for i in range(0,len(self.keybinds)):
+			if keyname.keysym == self.keybinds[i]:
 				self.buttons[i] = True
 		
 	def turn_key_off(self,keyname):
-		for i in range(0,len(KEYS)):
-			if keyname.keysym == KEYS[i]:
+		for i in range(0,len(self.keybinds)):
+			if keyname.keysym == self.keybinds[i]:
 				self.buttons[i] = False
 				self.buttons_release_wait[i] = True
 
@@ -81,6 +81,7 @@ class PytrisWidget(tk.Frame,Logic):
 			font = tk.font.Font(family="bahnschrift",size=int(PIECE_SIZE*BOARD_WIDTH/10),weight="bold"),fill="#78d",tag=tag)
 
 	def run_frame(self):
+		print(self.buttons)
 		if self.framecount%3 == 0:
 			self.after(16,self.run_frame)
 		else:

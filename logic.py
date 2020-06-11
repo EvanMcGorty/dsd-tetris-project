@@ -1,5 +1,6 @@
 from piece_operations import*
 from random import choice, shuffle
+from editable_keybinds_settings import*
 
 
 
@@ -11,7 +12,8 @@ class Logic(GameState):
 	def __init__(self):
 
 		super().__init__()
-
+		
+		self.keybinds = [RotateClockwise,RotateCounterockwise,Rotate180,MoveRight,MoveLeft,SoftDrop,HardDrop,HoldPiece]
 		self.cur_piece = None
 		self.cur_x,self.cur_y = (None,None)
 		self.until_next_fall = None

@@ -1,13 +1,11 @@
 from editable_player_settings import*
 from editable_visual_settings import*
-from editable_keybinds_settings import*
 
 PIECE_INDEX_INVERSE = {v: k for k, v in PIECE_INDEX.items()}
 
 PAINT_NOTHING = -2
 
 (ROT90,ROT270,ROT180,RIGHT,LEFT,SOFT,HARD,HOLD) = [0,1,2,3,4,5,6,7]
-KEYS = [RotateClockwise,RotateCounterockwise,Rotate180,MoveRight,MoveLeft,SoftDrop,HardDrop,HoldPiece]
 
 
 def make_board_matrix(initval,width,height):
