@@ -89,7 +89,7 @@ class Logic(GameState):
 			self.next_pieces_buffer.insert(0,self.generate_next_piece())
 		ret = self.next_pieces_buffer.pop()
 		for i in range(len(self.next_pieces_display)):
-			self.update_piece_display(PIECE_MATRICIES[self.next_pieces_buffer[i][0]],self.next_pieces_buffer[i][0],self.next_pieces_display[i])
+			update_piece_display(PIECE_MATRICIES[self.next_pieces_buffer[i][0]],self.next_pieces_buffer[i][0],self.next_pieces_display[i])
 		return ret
 
 	def initialize_next_piece(self):
@@ -101,11 +101,11 @@ class Logic(GameState):
 			else:
 				self.cur_piece,self.hold_piece = construct_piece(self.hold_piece),self.cur_piece[0]
 			self.whether_perform_hold = False
-			self.update_hold_display(PIECE_MATRICIES[self.hold_piece],SHADOW_TILE)
+			update_piece_display(PIECE_MATRICIES[self.hold_piece],SHADOW_TILE,self.hold_display)
 		else:
 			if self.is_hold_depleted:
 				self.is_hold_depleted = False
-				self.update_hold_display(PIECE_MATRICIES[self.hold_piece],self.hold_piece)
+				update_piece_display(PIECE_MATRICIES[self.hold_piece],self.hold_piece,self.hold_display)
 			self.cur_piece = self.get_next_piece()
 
 		self.cur_x = BOARD_WIDTH//2-2+BOARD_WIDTH%2

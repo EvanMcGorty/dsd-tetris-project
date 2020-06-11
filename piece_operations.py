@@ -48,6 +48,25 @@ def assign_update(val,raw,update,x,y):
 def make_piece_display():
 	return (make_board_matrix(BACKGROUND_TILE,PIECE_DISPLAY_WIDTH,PIECE_DISPLAY_HEIGHT),make_board_matrix(BACKGROUND_TILE,PIECE_DISPLAY_WIDTH,PIECE_DISPLAY_HEIGHT))
 
+
+def update_piece_display(matrix,piece,display):
+	found_bottom = -1
+	for y in range(len(matrix)):
+		if found_bottom == -1:
+			for x in matrix[y]:
+				if x:
+					found_bottom = y
+		for x in range(len(matrix[y])):
+			if found_bottom != -1 and y-found_bottom<PIECE_DISPLAY_HEIGHT and x<PIECE_DISPLAY_WIDTH:
+				cur = {True:piece,False:BACKGROUND_TILE}[matrix[y][x]]
+				assign_update(cur,display[0],display[1],x,y-found_bottom)
+		for x in range(len(matrix[y]),PIECE_DISPLAY_WIDTH):
+			assign_update(BACKGROUND_TILE,display[0],display[1],x,y-found_bottom)
+	for y in range(len(matrix),PIECE_DISPLAY_HEIGHT):
+		for x in range(PIECE_DISPLAY_WIDTH):
+			assign_update(BACKGROUND_TILE,display[0],display[1],x,y-found_bottom)
+
+
 class GameState:
 
 
@@ -64,28 +83,6 @@ class GameState:
 		self.next_pieces_display = []
 		for i in range(NEXT_PIECES):
 			self.next_pieces_display.append(make_piece_display())
-
-
-	def update_piece_display(self,matrix,piece,display):
-		found_bottom = -1
-		for y in range(len(matrix)):
-			if found_bottom == -1:
-				for x in matrix[y]:
-					if x:
-						found_bottom = y
-			for x in range(len(matrix[y])):
-				if found_bottom != -1 and y-found_bottom<PIECE_DISPLAY_HEIGHT and x<PIECE_DISPLAY_WIDTH:
-					cur = {True:piece,False:BACKGROUND_TILE}[matrix[y][x]]
-					assign_update(cur,display[0],display[1],x,y-found_bottom)
-			for x in range(len(matrix[y]),PIECE_DISPLAY_WIDTH):
-				assign_update(BACKGROUND_TILE,display[0],display[1],x,y-found_bottom)
-		for y in range(len(matrix),PIECE_DISPLAY_HEIGHT):
-			for x in range(PIECE_DISPLAY_WIDTH):
-				assign_update(BACKGROUND_TILE,display[0],display[1],x,y-found_bottom)
-
-
-	def update_hold_display(self,matrix,piece):
-		self.update_piece_display(matrix,piece,self.hold_display)
 
 
 	def increment_framecount(self):
@@ -131,8 +128,7 @@ class GameState:
 					continue
 				cur = index_piece(pieceval,ix,iy,blocktype)
 				if cur != BACKGROUND_TILE:
-					self.board[iy+y][ix+x] = cur
-					self.paint_update_board[iy+y][ix+x] = cur
+					assign_update(cur,self.board,self.paint_update_board,ix+x,iy+y)
 
 	def clear_piece(self,pieceval,x,y):
 		for ix in range(MATRIX_SIZE[pieceval[0]]):
@@ -141,8 +137,7 @@ class GameState:
 					continue
 				cur = index_piece(pieceval,ix,iy)
 				if cur != BACKGROUND_TILE:
-					self.board[iy+y][ix+x] = BACKGROUND_TILE
-					self.paint_update_board[iy+y][ix+x] = BACKGROUND_TILE
+					assign_update(BACKGROUND_TILE,self.board,self.paint_update_board,ix+x,iy+y)
 
 	def rows_to_clear(self):
 		ret = []

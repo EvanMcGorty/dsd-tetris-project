@@ -28,22 +28,25 @@ class PytrisWidget(tk.Frame,Logic):
 		Logic.__init__(self)
 		self.master = master
 		self.pack()
+		self.configure(bg = "red",width = 2*PIECE_DISPLAY_WIDTH*PIECE_SIZE+BOARD_WIDTH*PIECE_SIZE,height=BOARD_HEIGHT*PIECE_SIZE)
 		
 		self.left_panel = tk.Frame(self,width=PIECE_DISPLAY_WIDTH*PIECE_SIZE,height=BOARD_HEIGHT*PIECE_SIZE)
 		self.left_panel.pack(side = tk.LEFT)
 		self.hold_canvas = tk.Canvas(self.left_panel,width=PIECE_DISPLAY_WIDTH*PIECE_SIZE,height=PIECE_DISPLAY_HEIGHT*PIECE_SIZE)
 		self.hold_canvas.pack(side = tk.TOP)
-		self.info_canvas = tk.Canvas(self.left_panel,width=PIECE_DISPLAY_WIDTH*PIECE_SIZE,height=BOARD_HEIGHT*PIECE_SIZE-PIECE_DISPLAY_HEIGHT*PIECE_SIZE)
-		self.info_canvas.pack(side = tk.BOTTOM)
+		self.left_info_canvas = tk.Canvas(self.left_panel,width=PIECE_DISPLAY_WIDTH*PIECE_SIZE,height=BOARD_HEIGHT*PIECE_SIZE-PIECE_DISPLAY_HEIGHT*PIECE_SIZE)
+		self.left_info_canvas.pack(side = tk.BOTTOM)
 		self.board_canvas = tk.Canvas(self,width=BOARD_WIDTH*PIECE_SIZE,height=BOARD_HEIGHT*PIECE_SIZE)
 		self.board_canvas.pack(side = tk.LEFT)
 		self.right_panel = tk.Frame(self,width=PIECE_DISPLAY_WIDTH*PIECE_SIZE,height=BOARD_HEIGHT*PIECE_SIZE)
 		self.right_panel.pack(side = tk.LEFT)
 		self.next_pieces_frame = tk.Frame(self.right_panel,width=PIECE_DISPLAY_WIDTH*PIECE_SIZE,height=PIECE_DISPLAY_HEIGHT*PIECE_SIZE*NEXT_PIECES)
-		self.next_pieces_frame.pack(side = tk.BOTTOM)
+		self.next_pieces_frame.pack(side = tk.TOP)
+		self.right_info_canvas = tk.Canvas(self.right_panel,width=PIECE_DISPLAY_WIDTH*PIECE_SIZE,height=BOARD_HEIGHT*PIECE_SIZE-PIECE_DISPLAY_HEIGHT*PIECE_SIZE*NEXT_PIECES)
+		self.right_info_canvas.pack(side = tk.BOTTOM)
 		self.next_piece_canvases = []
 		for i in range(NEXT_PIECES):
-			cur = tk.Canvas(self.right_panel,width=PIECE_DISPLAY_WIDTH*PIECE_SIZE,height=PIECE_DISPLAY_HEIGHT*PIECE_SIZE)
+			cur = tk.Canvas(self.next_pieces_frame,width=PIECE_DISPLAY_WIDTH*PIECE_SIZE,height=PIECE_DISPLAY_HEIGHT*PIECE_SIZE)
 			cur.pack(side = tk.BOTTOM)
 			self.next_piece_canvases.append(cur)
 		self.bind('<Key>',self.turn_key_on)
@@ -62,14 +65,14 @@ class PytrisWidget(tk.Frame,Logic):
 				self.buttons_release_wait[i] = True
 
 	def paint_hold(self):
-		paint_canvas(self.hold_canvas,self.hold_display[1],int(not COLORBLIND_MODE)*0.5,0)
+		paint_canvas(self.hold_canvas,self.hold_display[1],int(not COLORBLIND_MODE)*0,0)
 
 	def paint_board(self):
 		paint_canvas(self.board_canvas,self.paint_update_board,int(not COLORBLIND_MODE)*0.5,0.5+int(COLORBLIND_MODE)*2)
 
 	def paint_next_pieces(self):
 		for i in range(len(self.next_piece_canvases)):
-			paint_canvas(self.next_piece_canvases[i],self.next_pieces_display[i][1],int(not COLORBLIND_MODE)*0.5,0)
+			paint_canvas(self.next_piece_canvases[i],self.next_pieces_display[i][1],int(not COLORBLIND_MODE)*0,0)
 	
 	def paint_messages(self):
 		tag = "messagetext"
@@ -81,7 +84,6 @@ class PytrisWidget(tk.Frame,Logic):
 			font = tk.font.Font(family="bahnschrift",size=int(PIECE_SIZE*BOARD_WIDTH/10),weight="bold"),fill="#78d",tag=tag)
 
 	def run_frame(self):
-		print(self.buttons)
 		if self.framecount%3 == 0:
 			self.after(16,self.run_frame)
 		else:
