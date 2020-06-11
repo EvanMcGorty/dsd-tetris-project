@@ -126,9 +126,12 @@ class GameWidget(tk.Frame,GameLogic):
 			else:
 				self.after(16,self.run_frame)
 
-		if CLOCKCHECK_PERIOD!=0 and self.framecount%CLOCKCHECK_PERIOD == 0:
-			self.timel = time.clock()
-		self.wait_longer = (self.framecount%CLOCKCHECK_PERIOD)/60>(time.clock()-self.timel)
+		if CLOCKCHECK_PERIOD!=0:
+			if self.framecount%CLOCKCHECK_PERIOD == 0:
+				self.timel = time.clock()
+			self.wait_longer = (self.framecount%CLOCKCHECK_PERIOD)/60>(time.clock()-self.timel)
+		else:
+			self.wait_longer = not(self.framecount%3)
 
 		self.perform_frame_logic()
 		self.paint_board()
