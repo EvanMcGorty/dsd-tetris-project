@@ -1,5 +1,6 @@
 from piece_operations import*
 import random
+import math
 
 
 
@@ -10,6 +11,8 @@ class GameLogic(GameState):
 
 		super().__init__()
 		self.linecount = 0
+		self.score = 0
+		self.curframescore = 0
 		self.linegoal = linegoal
 		self.timegoal = timegoal
 		self.rng = rng
@@ -112,6 +115,9 @@ class GameLogic(GameState):
 				self.is_hold_depleted = False
 				update_piece_display(PIECE_MATRICIES[self.hold_piece],self.hold_piece,self.hold_display)
 			self.cur_piece = self.get_next_piece()
+			
+		self.score+=self.curframescore
+		self.curframescore = 0
 
 		self.cur_x = BOARD_WIDTH//2-2+BOARD_WIDTH%2
 		self.cur_y = BOARD_HEIGHT-3
@@ -210,23 +216,29 @@ class GameLogic(GameState):
 
 	def regspin(self):
 		self.display_message(PIECE_INDEX_INVERSE[self.cur_piece[0]]+"-spin")
+		self.score+=200
 
 	def regallclear(self):
 		self.display_message("all clear")
+		self.score+=4000
 
 	def regcombo(self):
 		self.display_message("Combo x"+str(self.combo_streak))
+		self.score+=(int(math.sqrt(2*(self.combo_streak-1))))*100
 
 	def regb2b(self):
 		self.display_message("B2B x"+str(self.b2b_streak))
+		self.score+=(int(math.sqrt(2*(self.b2b_streak+2))))*200
 
-	def regclear(self,rowcount):
+	def regclear(self,rowcount,was_spin):
 		self.linecount+=rowcount
 		self.display_message({1:"single!",2:"double!",3:"triple!",4:"tetris!"}[rowcount])
+		self.score+=2**rowcount*{False:100,True:300}[was_spin and self.cur_piece[0] == PIECE_INDEX['t']]
 		if self.linegoal!=None and self.linecount>=self.linegoal:
 			self.win_game()
 
 	def manage_clear_info(self,rowcount,was_spin):
+
 		if was_spin:
 			self.regspin()	
 
@@ -253,7 +265,7 @@ class GameLogic(GameState):
 			else:
 				self.b2b_streak=0
 			
-			self.regclear(rowcount)
+			self.regclear(rowcount,was_spin)
 		else:
 			self.combo_streak=0
 
@@ -354,5 +366,7 @@ class GameLogic(GameState):
 		if self.framecount%(60*60)/60<10:
 			ret+="0"
 		ret+=str(int((self.framecount%(60*60))/6)/10) + "\n"
-		ret+="Lines: " + str(self.linecount)
+		ret+="Lines: " + str(self.linecount) + "\n"
+		ret+= "Score: " + str(self.score)
+		
 		return ret
