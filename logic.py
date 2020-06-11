@@ -3,8 +3,6 @@ import random
 
 
 
-FRAMES_PER_FALL = 360/GRAVITY
-
 class Logic(GameState):
 
 		
@@ -20,8 +18,8 @@ class Logic(GameState):
 		self.game_over = None
 		self.lock_buffer = None
 		self.ultimate_lock_buffer = None
-		self.left_das_countdown = None
-		self.right_das_countdown = None
+		self.left_das_countdown = DAS
+		self.right_das_countdown = DAS
 		self.cur_move_offset = None
 		self.last_move_direction = None
 		self.randomizer_data = None
@@ -46,7 +44,8 @@ class Logic(GameState):
 		self.combo_streak = 0
 		self.b2b_streak = 0
 		
-		
+	def frames_per_fall(self):
+		return 360/(GRAVITY+self.framecount/60*GRAVITY_INCREASE_PER_SECOND)
 
 	def check_button_press(self,i):
 		if self.buttons[i] and self.buttons_release_wait[i]:
@@ -110,12 +109,10 @@ class Logic(GameState):
 
 		self.cur_x = BOARD_WIDTH//2-2+BOARD_WIDTH%2
 		self.cur_y = BOARD_HEIGHT-3
-		self.until_next_fall = FRAMES_PER_FALL
+		self.until_next_fall = self.frames_per_fall()
 		self.game_over = False
 		self.lock_buffer = LOCK_DELAY
 		self.ultimate_lock_buffer = LOCK_DELAY*ULTIMATE_LOCK_MULTIPLIER
-		self.left_das_countdown = DAS
-		self.right_das_countdown = DAS
 		self.cur_move_offset = 0
 		self.last_move_direction = 0
 		if not self.can_place_piece(self.cur_piece,self.cur_x,self.cur_y):
@@ -252,7 +249,7 @@ class Logic(GameState):
 	def try_dropping(self):
 
 		if self.check_button_press(HARD):
-			self.until_next_fall=-1*BOARD_HEIGHT*FRAMES_PER_FALL
+			self.until_next_fall=-1*BOARD_HEIGHT*self.frames_per_fall()
 			self.lock_buffer = 0
 		elif self.buttons[SOFT]:
 			self.until_next_fall-=SDF
@@ -262,7 +259,7 @@ class Logic(GameState):
 
 	def try_falling(self):
 		while self.until_next_fall<=0:
-			self.until_next_fall+=FRAMES_PER_FALL
+			self.until_next_fall+=self.frames_per_fall()
 			if self.can_place_piece(self.cur_piece,self.cur_x,self.cur_y-1):
 				self.cur_y-=1
 			else:
