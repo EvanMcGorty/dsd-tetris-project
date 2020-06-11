@@ -29,7 +29,7 @@ class GameWidget(tk.Frame,GameLogic):
 		GameLogic.__init__(self,rng,keybinds,linegoal,timegoal)
 		self.master = master
 		if LOG_TIME_OFFSET:
-			self.time0 = time.clock()
+			self.time0 = time.time()
 		self.wait_longer = False
 
 		self.piece_display_height = PIECE_DISPLAY_HEIGHT*PIECE_SIZE
@@ -113,7 +113,7 @@ class GameWidget(tk.Frame,GameLogic):
 			self.left_info_canvas.delete(oldtext)
 		text=self.get_info_string()
 		if LOG_TIME_OFFSET:
-			text+="\nIGT-RT="+ str(int((self.framecount/60-(time.clock()-self.time0))*100)/100)
+			text+="\nIGT-RT="+ str(int((self.framecount/60-(time.time()-self.time0))*100)/100)
 		self.left_info_canvas.create_text(0,0,
 		anchor = tk.NW,
 		text=text,
@@ -128,8 +128,8 @@ class GameWidget(tk.Frame,GameLogic):
 
 		if CLOCKCHECK_PERIOD!=0:
 			if self.framecount%CLOCKCHECK_PERIOD == 0:
-				self.timel = time.clock()
-			self.wait_longer = (self.framecount%CLOCKCHECK_PERIOD)/60>(time.clock()-self.timel)
+				self.timel = time.time()
+			self.wait_longer = (self.framecount%CLOCKCHECK_PERIOD)/60>(time.time()-self.timel)
 		else:
 			self.wait_longer = not(self.framecount%3)
 
