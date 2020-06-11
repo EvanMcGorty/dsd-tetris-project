@@ -46,7 +46,6 @@ class PytrisWidget(tk.Frame,Logic):
 			cur = tk.Canvas(self.right_panel,width=PIECE_DISPLAY_WIDTH*PIECE_SIZE,height=PIECE_DISPLAY_HEIGHT*PIECE_SIZE)
 			cur.pack(side = tk.BOTTOM)
 			self.next_piece_canvases.append(cur)
-		self.focus_set()		
 		self.bind('<Key>',self.turn_key_on)
 		self.bind('<KeyRelease>',self.turn_key_off)
 		self.run_frame()

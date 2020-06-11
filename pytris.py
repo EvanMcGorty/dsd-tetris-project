@@ -1,3 +1,5 @@
 from widget import*
 
-PytrisWidget(master=tk.Tk()).mainloop()
+game = PytrisWidget(master=tk.Tk())
+game.focus_set()
+game.mainloop()
