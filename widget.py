@@ -28,8 +28,8 @@ class GameWidget(tk.Frame,GameLogic):
 		tk.Frame.__init__(self,master)
 		GameLogic.__init__(self,rng,keybinds,linegoal,timegoal)
 		self.master = master
-
-		self.time0 = time.clock()
+		if LOG_TIME_OFFSET:
+			self.time0 = time.clock()
 		self.wait_longer = False
 
 		self.piece_display_height = PIECE_DISPLAY_HEIGHT*PIECE_SIZE
