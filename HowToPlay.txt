@@ -1,4 +1,6 @@
 Run pytris.py to play
 Edit settings to your liking in editable_keybinds_settings.py, editable_player_settings.py, and editable_visual_settings.py
+To end the game after 1 minute, pass the argument "blitz"
+To end the game after 20 lines, pass the argument "sprint"
 For 2 players, pass the argument "2p"
 For player 2 controls, use a program like joytokey and map a controller to the keybinds in editable_keybinds_settings_p2.py
