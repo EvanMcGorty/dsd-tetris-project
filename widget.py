@@ -24,9 +24,9 @@ def paint_canvas(canvas,board,piecegridwidth,gridwidth):
 
 class GameWidget(tk.Frame,GameLogic):
 
-	def __init__(self, master=None,rng=random.Random(),keybinds = p1controls.keybinds):
+	def __init__(self, master=None,rng=random.Random(),keybinds = p1controls.keybinds,linegoal=None):
 		tk.Frame.__init__(self,master)
-		GameLogic.__init__(self,rng,keybinds)
+		GameLogic.__init__(self,rng,keybinds,linegoal)
 		self.master = master
 
 		self.time0 = time.clock()
@@ -111,10 +111,11 @@ class GameWidget(tk.Frame,GameLogic):
 		oldtext = self.left_info_canvas.find_withtag(tag)
 		if len(oldtext)!=0:
 			self.left_info_canvas.delete(oldtext)
-
+		text=self.get_info_string()
+		text+="\nIGT-RT="+ str(int((self.framecount/60-(time.clock()-self.time0))*100)/100)
 		self.left_info_canvas.create_text(0,0,
 		anchor = tk.NW,
-		text=self.get_info_string(),
+		text=text,
 		font = tk.font.Font(family="bahnschrift",size=int(PIECE_SIZE*BOARD_WIDTH/20),weight="bold"),fill=TEXT_COLOR,tags=(0,tag))
 
 	def run_frame(self):
@@ -123,10 +124,9 @@ class GameWidget(tk.Frame,GameLogic):
 		else:
 			self.after(16,self.run_frame)
 
-		if self.framecount%6 == 0:
+		if self.framecount%CLOCKCHECK_PERIOD == 0:
 			self.timel = time.clock()
-			print(str(self.framecount/60) + ":" + str(time.clock()-self.time0))
-		self.wait_longer = (self.framecount%5)/60>(time.clock()-self.timel)
+		self.wait_longer = (self.framecount%CLOCKCHECK_PERIOD)/60>(time.clock()-self.timel)
 
 		self.perform_frame_logic()
 		self.paint_board()

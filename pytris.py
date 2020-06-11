@@ -9,13 +9,16 @@ class Pytris(tk.Frame):
 
 	def run(self,args):
 		self.rngseed = random.randint(0,int(2**64-1))
-		if len(args)>1 and args[1]=="2p":
+		self.linegoal = None
+		if "sprint" in args:
+			self.linegoal = 40
+		if "2p" in args:
 			self.run_2player()
 		else:
 			self.run_basic()
 
 	def run_basic(self):
-		self.game = GameWidget(master=self.m)
+		self.game = GameWidget(master=self.m,linegoal=self.linegoal)
 		self.game.pack()
 		self.game.focus_set()
 		self.game.mainloop()
@@ -27,7 +30,7 @@ class Pytris(tk.Frame):
 		rng2.seed(self.rngseed)
 		self.left = GameWidget(master=self.m,rng=rng1)
 		self.left.pack(side = tk.LEFT)
-		self.right = GameWidget(master=self.m,rng=rng2,keybinds=p2controls.keybinds)
+		self.right = GameWidget(master=self.m,rng=rng2,keybinds=p2controls.keybinds,linegoal=self.linegoal)
 		self.right.pack(side = tk.RIGHT)
 		self.m.focus_set()
 		self.m.bind('<Key>',self.on)
@@ -49,4 +52,4 @@ class Pytris(tk.Frame):
 
 pytris = Pytris(master=tk.Tk())
 pytris.pack()
-pytris.run(sys.argv)
+pytris.run(set(sys.argv))

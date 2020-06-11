@@ -6,16 +6,17 @@ import random
 class GameLogic(GameState):
 
 		
-	def __init__(self,rng,keybinds):
+	def __init__(self,rng,keybinds,linegoal):
 
 		super().__init__()
 		self.linecount = 0
+		self.linegoal = linegoal
 		self.rng = rng
 		self.keybinds = keybinds
 		self.cur_piece = None
 		self.cur_x,self.cur_y = (None,None)
 		self.until_next_fall = None
-		self.game_over = None
+		self.game_finished = None
 		self.lock_buffer = None
 		self.ultimate_lock_buffer = None
 		self.left_das_countdown = DAS
@@ -110,13 +111,14 @@ class GameLogic(GameState):
 		self.cur_x = BOARD_WIDTH//2-2+BOARD_WIDTH%2
 		self.cur_y = BOARD_HEIGHT-3
 		self.until_next_fall = self.frames_per_fall()
-		self.game_over = False
+		self.game_finished = False
 		self.lock_buffer = LOCK_DELAY
 		self.ultimate_lock_buffer = LOCK_DELAY*ULTIMATE_LOCK_MULTIPLIER
 		self.cur_move_offset = 0
 		self.last_move_direction = 0
 		if not self.can_place_piece(self.cur_piece,self.cur_x,self.cur_y):
-			self.game_over = True
+			self.display_message("Game Over!")
+			self.game_finished = True
 
 
 
@@ -202,12 +204,28 @@ class GameLogic(GameState):
 				ret = False
 		return ret
 
+	def regspin(self):
+		self.display_message(PIECE_INDEX_INVERSE[self.cur_piece[0]]+"-spin")
+
+	def regallclear(self):
+		self.display_message("all clear")
+
+	def regcombo(self):
+		self.display_message("Combo x"+str(self.combo_streak))
+
+	def regb2b(self):
+		self.display_message("B2B x"+str(self.b2b_streak))
+
+	def regclear(self,rowcount):
+		self.linecount+=rowcount
+		self.display_message({1:"single!",2:"double!",3:"triple!",4:"tetris!"}[rowcount])
+		if self.linegoal!=None and self.linecount>=self.linegoal:
+			self.game_finished = True
+			self.display_message("Game!")
 
 	def manage_clear_info(self,rowcount,was_spin):
 		if was_spin:
-			self.display_message(PIECE_INDEX_INVERSE[self.cur_piece[0]]+"-spin")
-		self.linecount+=rowcount
-				
+			self.regspin()	
 
 		if rowcount>0:
 			all_clear = True
@@ -219,20 +237,20 @@ class GameLogic(GameState):
 				if not all_clear:
 					break
 			if all_clear:
-				self.display_message("all clear")
+				self.regallclear()
 			
 			self.combo_streak+=1
 			if self.combo_streak>=2:
-				self.display_message("Combo x"+str(self.combo_streak))
+				self.regcombo()
 
 			if rowcount==4 or (was_spin and self.cur_piece[0] == PIECE_INDEX['t']):
 				self.b2b_streak+=1
 				if self.b2b_streak>=2:
-					self.display_message("B2B x"+str(self.b2b_streak))
+					self.regb2b()
 			else:
 				self.b2b_streak=0
 			
-			self.display_message({1:"single!",2:"double!",3:"triple!",4:"tetris!"}[rowcount])
+			self.regclear(rowcount)
 		else:
 			self.combo_streak=0
 
@@ -294,7 +312,7 @@ class GameLogic(GameState):
 
 	def perform_frame_logic(self):
 
-		if self.game_over:
+		if self.game_finished:
 			return
 
 		self.clear_piece(self.cur_piece,self.cur_x,self.cur_y)
@@ -310,9 +328,8 @@ class GameLogic(GameState):
 		self.framecount+=1
 
 		
-		if self.game_over:
+		if self.game_finished:
 			self.place_piece(self.cur_piece,self.cur_x,self.cur_y)
-			self.display_message("GAME OVER!")
 			return
 
 		if PIECE_HOLDS:

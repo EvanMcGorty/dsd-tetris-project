@@ -7,6 +7,8 @@ PIECE_DISPLAY_WIDTH = 4 #How many tiles wide a piece display is
 PIECE_DISPLAY_HEIGHT = 2 #How many tiles tall a piece display is
 MESSAGE_COLOR = "#78d"
 TEXT_COLOR = "#000"
+CLOCKCHECK_PERIOD = 12 #length in frames of the period over which fps will be stabilized.
+LOG_TIME_OFFSET = False #Whether to log how far off in game time is from real time
 
 SHADOW_TILE = -1 #Used in the color scheme
 BACKGROUND_TILE = 0 #Used in the color scheme
