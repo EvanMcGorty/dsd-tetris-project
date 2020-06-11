@@ -21,11 +21,11 @@ def paint_canvas(canvas,board,piecegridwidth,gridwidth):
 					tags = (0,tag))
 				board[len(board)-1-y][x] = PAINT_NOTHING
 
-class GameWidget(tk.Frame,Logic):
+class GameWidget(tk.Frame,GameLogic):
 
 	def __init__(self, master=None,rng=random.Random(),keybinds = p1controls.keybinds):
 		tk.Frame.__init__(self,master)
-		Logic.__init__(self,rng,keybinds)
+		GameLogic.__init__(self,rng,keybinds)
 		self.master = master
 
 		piece_display_height = PIECE_DISPLAY_HEIGHT*PIECE_SIZE

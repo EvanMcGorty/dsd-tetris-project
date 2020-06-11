@@ -3,7 +3,7 @@ import random
 
 
 
-class Logic(GameState):
+class GameLogic(GameState):
 
 		
 	def __init__(self,rng,keybinds):
