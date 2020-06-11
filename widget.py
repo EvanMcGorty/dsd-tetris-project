@@ -28,27 +28,43 @@ class PytrisWidget(tk.Frame,Logic):
 		Logic.__init__(self)
 		self.master = master
 		self.pack()
-		self.configure(bg = "red",width = 2*PIECE_DISPLAY_WIDTH*PIECE_SIZE+BOARD_WIDTH*PIECE_SIZE,height=BOARD_HEIGHT*PIECE_SIZE)
-		
-		self.left_panel = tk.Frame(self,width=PIECE_DISPLAY_WIDTH*PIECE_SIZE,height=BOARD_HEIGHT*PIECE_SIZE)
-		self.left_panel.pack(side = tk.LEFT)
-		self.hold_canvas = tk.Canvas(self.left_panel,width=PIECE_DISPLAY_WIDTH*PIECE_SIZE,height=PIECE_DISPLAY_HEIGHT*PIECE_SIZE)
-		self.hold_canvas.pack(side = tk.TOP)
-		self.left_info_canvas = tk.Canvas(self.left_panel,width=PIECE_DISPLAY_WIDTH*PIECE_SIZE,height=BOARD_HEIGHT*PIECE_SIZE-PIECE_DISPLAY_HEIGHT*PIECE_SIZE)
-		self.left_info_canvas.pack(side = tk.BOTTOM)
-		self.board_canvas = tk.Canvas(self,width=BOARD_WIDTH*PIECE_SIZE,height=BOARD_HEIGHT*PIECE_SIZE)
-		self.board_canvas.pack(side = tk.LEFT)
-		self.right_panel = tk.Frame(self,width=PIECE_DISPLAY_WIDTH*PIECE_SIZE,height=BOARD_HEIGHT*PIECE_SIZE)
-		self.right_panel.pack(side = tk.LEFT)
-		self.next_pieces_frame = tk.Frame(self.right_panel,width=PIECE_DISPLAY_WIDTH*PIECE_SIZE,height=PIECE_DISPLAY_HEIGHT*PIECE_SIZE*NEXT_PIECES)
-		self.next_pieces_frame.pack(side = tk.TOP)
-		self.right_info_canvas = tk.Canvas(self.right_panel,width=PIECE_DISPLAY_WIDTH*PIECE_SIZE,height=BOARD_HEIGHT*PIECE_SIZE-PIECE_DISPLAY_HEIGHT*PIECE_SIZE*NEXT_PIECES)
-		self.right_info_canvas.pack(side = tk.BOTTOM)
+
+		piece_display_height = PIECE_DISPLAY_HEIGHT*PIECE_SIZE
+		piece_display_width = PIECE_DISPLAY_WIDTH*PIECE_SIZE
+		left_width = PIECE_DISPLAY_WIDTH*PIECE_SIZE
+		right_width = piece_display_width
+		middle_width = BOARD_WIDTH*PIECE_SIZE
+		middle_height = BOARD_HEIGHT*PIECE_SIZE
+		next_pieces_height = PIECE_DISPLAY_HEIGHT*PIECE_SIZE*NEXT_PIECES
+		next_pieces_width = PIECE_DISPLAY_WIDTH*PIECE_SIZE
+		largest_height = max(middle_height,piece_display_height,next_pieces_height)
+		right_info_height = largest_height-next_pieces_height
+		left_info_height = largest_height-piece_display_height
+
+		self.configure(width = left_width+middle_width+right_width,height=largest_height)
+
+		self.left_panel = tk.Frame(self,width=left_width,height=largest_height)
+		self.left_panel.grid(row=0,column=0,sticky=tk.N)
+		self.hold_canvas = tk.Canvas(self.left_panel,width=piece_display_width,height=piece_display_height)
+		self.hold_canvas.grid(row=0,column=0)
+		self.left_info_canvas = tk.Canvas(self.left_panel,width=left_width,height=left_info_height)
+		self.left_info_canvas.grid(row=1,column=0)
+
+		self.board_canvas = tk.Canvas(self,width=middle_width,height=largest_height)
+		self.board_canvas.grid(row=0,column=1,sticky=tk.N)
+
+		self.right_panel = tk.Frame(self,width=right_width,height=largest_height)
+		self.right_panel.grid(row=0,column=2,sticky=tk.N)
+		self.next_pieces_frame = tk.Frame(self.right_panel,width=next_pieces_width,height=next_pieces_height)
+		self.next_pieces_frame.grid(row=0,column=0)
+		self.right_info_canvas = tk.Canvas(self.right_panel,width=right_width,height=right_info_height)
+		self.right_info_canvas.grid(row=1,column=0)
 		self.next_piece_canvases = []
 		for i in range(NEXT_PIECES):
-			cur = tk.Canvas(self.next_pieces_frame,width=PIECE_DISPLAY_WIDTH*PIECE_SIZE,height=PIECE_DISPLAY_HEIGHT*PIECE_SIZE)
-			cur.pack(side = tk.BOTTOM)
+			cur = tk.Canvas(self.next_pieces_frame,width=piece_display_width,height=piece_display_height)
+			cur.grid(row=NEXT_PIECES-1-i,column=0)
 			self.next_piece_canvases.append(cur)
+
 		self.bind('<Key>',self.turn_key_on)
 		self.bind('<KeyRelease>',self.turn_key_off)
 		self.run_frame()
