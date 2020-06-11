@@ -6,28 +6,29 @@ import random
 class GameLogic(GameState):
 
 		
-	def __init__(self,rng,keybinds,linegoal):
+	def __init__(self,rng,keybinds,linegoal,timegoal):
 
 		super().__init__()
 		self.linecount = 0
 		self.linegoal = linegoal
+		self.timegoal = timegoal
 		self.rng = rng
 		self.keybinds = keybinds
+		self.game_finished = False
+		self.left_das_countdown = DAS
+		self.right_das_countdown = DAS
+		self.is_hold_depleted = False
+		self.whether_perform_hold = False
 		self.cur_piece = None
 		self.cur_x,self.cur_y = (None,None)
 		self.until_next_fall = None
-		self.game_finished = None
 		self.lock_buffer = None
 		self.ultimate_lock_buffer = None
-		self.left_das_countdown = DAS
-		self.right_das_countdown = DAS
 		self.cur_move_offset = None
 		self.last_move_direction = None
 		self.randomizer_data = None
 		self.last_shadow = None
 		self.hold_piece = None
-		self.is_hold_depleted = False
-		self.whether_perform_hold = False
 		self.next_pieces_buffer = []
 
 		self.buttons = []
@@ -44,7 +45,11 @@ class GameLogic(GameState):
 		
 		self.combo_streak = 0
 		self.b2b_streak = 0
-		
+
+	def win_game(self):
+		self.game_finished = True
+		self.display_message("Game!")
+
 	def frames_per_fall(self):
 		return 360/(GRAVITY+self.framecount/60*GRAVITY_INCREASE_PER_SECOND)
 
@@ -111,7 +116,6 @@ class GameLogic(GameState):
 		self.cur_x = BOARD_WIDTH//2-2+BOARD_WIDTH%2
 		self.cur_y = BOARD_HEIGHT-3
 		self.until_next_fall = self.frames_per_fall()
-		self.game_finished = False
 		self.lock_buffer = LOCK_DELAY
 		self.ultimate_lock_buffer = LOCK_DELAY*ULTIMATE_LOCK_MULTIPLIER
 		self.cur_move_offset = 0
@@ -220,8 +224,7 @@ class GameLogic(GameState):
 		self.linecount+=rowcount
 		self.display_message({1:"single!",2:"double!",3:"triple!",4:"tetris!"}[rowcount])
 		if self.linegoal!=None and self.linecount>=self.linegoal:
-			self.game_finished = True
-			self.display_message("Game!")
+			self.win_game()
 
 	def manage_clear_info(self,rowcount,was_spin):
 		if was_spin:
@@ -327,6 +330,8 @@ class GameLogic(GameState):
 			
 		self.framecount+=1
 
+		if self.timegoal!=None and self.framecount>=int(self.timegoal):
+			self.win_game()
 		
 		if self.game_finished:
 			self.place_piece(self.cur_piece,self.cur_x,self.cur_y)
@@ -343,6 +348,9 @@ class GameLogic(GameState):
 
 	def get_info_string(self):
 		ret = ""
-		ret+="Time: " + str(int(self.framecount/6)/10) + "\n"
+		ret+="Time: "
+		if self.framecount>=60*60:
+			ret+=str(self.framecount//(60*60)) + ":"
+		ret+=str(int((self.framecount%(60*60))/6)/10) + "\n"
 		ret+="Lines: " + str(self.linecount)
 		return ret
