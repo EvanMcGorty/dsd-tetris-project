@@ -1,6 +1,5 @@
 from piece_operations import*
-from random import choice, shuffle
-from editable_keybinds_settings import*
+import random
 
 
 
@@ -9,11 +8,12 @@ FRAMES_PER_FALL = 360/GRAVITY
 class Logic(GameState):
 
 		
-	def __init__(self):
+	def __init__(self,rng,keybinds):
 
 		super().__init__()
 		
-		self.keybinds = [RotateClockwise,RotateCounterockwise,Rotate180,MoveRight,MoveLeft,SoftDrop,HardDrop,HoldPiece]
+		self.rng = rng
+		self.keybinds = keybinds
 		self.cur_piece = None
 		self.cur_x,self.cur_y = (None,None)
 		self.until_next_fall = None
@@ -60,27 +60,27 @@ class Logic(GameState):
 	def generate_next_piece(self):
 
 		if RANDOMIZER_MODE == "random":
-			return construct_piece(choice(list(PIECE_INDEX.values())))
+			return construct_piece(self.rng.choice(list(PIECE_INDEX.values())))
 
 		elif RANDOMIZER_MODE == "classic":
-			tryrandom = choice(list(PIECE_INDEX.values()))
+			tryrandom = self.rng.choice(list(PIECE_INDEX.values()))
 			if tryrandom!=self.randomizer_data:
 				self.randomizer_data = tryrandom
 				return construct_piece(self.randomizer_data)
 			else:
-				self.randomizer_data = choice(list(PIECE_INDEX.values()))
+				self.randomizer_data = self.rng.choice(list(PIECE_INDEX.values()))
 				return construct_piece(self.randomizer_data)
 
 		elif RANDOMIZER_MODE == "7bag":
 			if self.randomizer_data == None or len(self.randomizer_data) == 0:
 				self.randomizer_data=list(PIECE_INDEX.values())
-				shuffle(self.randomizer_data)
+				self.rng.shuffle(self.randomizer_data)
 			return construct_piece(self.randomizer_data.pop())
 		
 		elif RANDOMIZER_MODE == "14bag":
 			if self.randomizer_data == None or len(self.randomizer_data) == 0:
 				self.randomizer_data=list(PIECE_INDEX.values())+list(PIECE_INDEX.values())
-				shuffle(self.randomizer_data)
+				self.rng.shuffle(self.randomizer_data)
 			return construct_piece(self.randomizer_data.pop())
 
 

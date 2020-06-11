@@ -2,7 +2,7 @@ import tkinter as tk
 import tkinter.font
 
 from logic import*
-
+import editable_keybinds_settings as p1controls
 
 def paint_canvas(canvas,board,piecegridwidth,gridwidth):
 	for y in range(0,len(board)):
@@ -21,13 +21,12 @@ def paint_canvas(canvas,board,piecegridwidth,gridwidth):
 					tags = (0,tag))
 				board[len(board)-1-y][x] = PAINT_NOTHING
 
-class PytrisWidget(tk.Frame,Logic):
+class GameWidget(tk.Frame,Logic):
 
-	def __init__(self, master=None):
+	def __init__(self, master=None,rng=random.Random(),keybinds = p1controls.keybinds):
 		tk.Frame.__init__(self,master)
-		Logic.__init__(self)
+		Logic.__init__(self,rng,keybinds)
 		self.master = master
-		self.pack()
 
 		piece_display_height = PIECE_DISPLAY_HEIGHT*PIECE_SIZE
 		piece_display_width = PIECE_DISPLAY_WIDTH*PIECE_SIZE

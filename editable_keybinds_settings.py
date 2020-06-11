@@ -8,3 +8,4 @@ MoveLeft = 'Left'
 SoftDrop = 'Down'
 HardDrop = 'space'
 HoldPiece = 'c'
+keybinds = [RotateClockwise,RotateCounterockwise,Rotate180,MoveRight,MoveLeft,SoftDrop,HardDrop,HoldPiece]
