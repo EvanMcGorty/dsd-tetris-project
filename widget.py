@@ -117,7 +117,7 @@ class GameWidget(tk.Frame,GameLogic):
 		self.left_info_canvas.create_text(0,0,
 		anchor = tk.NW,
 		text=text,
-		font = tk.font.Font(family="bahnschrift",size=int(PIECE_SIZE*BOARD_WIDTH/20),weight="bold"),fill=TEXT_COLOR,tags=(0,tag))
+		font = tk.font.Font(family="bahnschrift",size=int(PIECE_SIZE*BOARD_WIDTH/25),weight="bold"),fill=TEXT_COLOR,tags=(0,tag))
 
 	def run_frame(self):
 		if not self.game_finished:

@@ -117,8 +117,6 @@ class GameLogic(GameState):
 				update_piece_display(PIECE_MATRICIES[self.hold_piece],self.hold_piece,self.hold_display)
 			self.cur_piece = self.get_next_piece()
 			
-		self.score+=self.curframescore*self.level
-		self.curframescore = 0
 		while self.level*(self.level+1) < self.linecount:
 			self.level+=1
 		self.cur_x = BOARD_WIDTH//2-2+BOARD_WIDTH%2
@@ -218,28 +216,31 @@ class GameLogic(GameState):
 
 	def regspin(self):
 		self.display_message(PIECE_INDEX_INVERSE[self.cur_piece[0]]+"-spin")
-		self.score+=200
+		self.curframescore+=200
 
 	def regallclear(self):
 		self.display_message("all clear")
-		self.score+=4000
+		self.curframescore+=4000
 
 	def regcombo(self):
 		self.display_message("Combo x"+str(self.combo_streak))
-		self.score+=(int(math.sqrt(2*(self.combo_streak-1))))*100
+		self.curframescore+=(int(math.sqrt(2*(self.combo_streak-1))))*100
 
 	def regb2b(self):
 		self.display_message("B2B x"+str(self.b2b_streak))
-		self.score+=(int(math.sqrt(2*(self.b2b_streak+2))))*200
+		self.curframescore+=(int(math.sqrt(2*(self.b2b_streak+2))))*200
 
 	def regclear(self,rowcount,was_spin):
 		self.linecount+=rowcount
 		self.display_message({1:"single!",2:"double!",3:"triple!",4:"tetris!"}[rowcount])
-		self.score+=2**rowcount*{False:100,True:300}[was_spin and self.cur_piece[0] == PIECE_INDEX['t']]
+		self.curframescore+=2**rowcount*{False:100,True:300}[was_spin and self.cur_piece[0] == PIECE_INDEX['t']]
 		if self.linegoal!=None and self.linecount>=self.linegoal:
 			self.win_game()
 
 	def manage_clear_info(self,rowcount,was_spin):
+
+		self.score+=self.curframescore*self.level
+		self.curframescore = 0
 
 		if was_spin:
 			self.regspin()	
@@ -370,6 +371,7 @@ class GameLogic(GameState):
 		ret+=str(int((self.framecount%(60*60))/6)/10) + "\n"
 		ret+="Lines: " + str(self.linecount) + "\n"
 		ret+="Score: " + str(self.score) + "\n"
+		ret+="      +" + str(self.curframescore*self.level) + "\n"
 		ret+="Level " + str(self.level)
 		
 		return ret

@@ -12,9 +12,11 @@ class Pytris(tk.Frame):
 		self.linegoal = None
 		self.timegoal = None
 		if "sprint" in args:
-			self.linegoal = 20
+			self.linegoal = SPRINT_LINE_COUNT
+
 		if "blitz" in args:
-			self.timegoal = 60*60
+			self.timegoal = BLITZ_TIME_AMOUNT
+
 		if "2p" in args:
 			self.run_2player()
 		else:

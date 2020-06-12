@@ -1,8 +1,8 @@
 ARR = 1.5 #Auto Repeat Rate: How many frames it takes for a piece to move while auto shifting
 DAS = 7 #Delayed Auto Shift: How many frames a direction must be held to begin auto shifting
 SDF = 8 #Soft Drop Multiplier: Fall speed mulitplier when soft dropping
-GRAVITY = 24 #Base fall speed, 360/gravity is the number of frames it takes to fall once
-GRAVITY_INCREASE_PER_SECOND = 0 #Increase in gravity by time
+GRAVITY = 12 #Base fall speed, 360/gravity is the number of frames it takes to fall once
+GRAVITY_INCREASE_PER_SECOND = 0.5 #Increase in gravity by time
 GRAVITY_INCREASE_PER_LEVEL = 12 #Increase in gravity per level
 LOCK_DELAY = 30 #The number of extra frames a piece touching the floor has before locking, resets when it is moved
 ULTIMATE_LOCK_MULTIPLIER = 10 #Multiplier for the amount of lock delay that doesnt reset when the piece is moved
@@ -13,3 +13,5 @@ BOARD_WIDTH = 10 #How many tiles are across the board. Would you really try chan
 BOARD_HEIGHT = 20 #How many tiles tall the board is. I suppose this could be a fun challenge?
 NEXT_PIECES = 5 #How many next pieces are displayed to the right of the board
 PIECE_HOLDS = True #Whether to enable holds, which let you store a piece for later
+SPRINT_LINE_COUNT = 20 #How many lines the player must clear in order to win in sprint
+BLITZ_TIME_AMOUNT = 60*60 #How many frames the player must survive for to win in blitz
