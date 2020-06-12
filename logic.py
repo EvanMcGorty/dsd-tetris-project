@@ -10,6 +10,7 @@ class GameLogic(GameState):
 	def __init__(self,rng,keybinds,linegoal,timegoal):
 
 		super().__init__()
+		self.level = 1
 		self.linecount = 0
 		self.score = 0
 		self.curframescore = 0
@@ -54,7 +55,7 @@ class GameLogic(GameState):
 		self.display_message("Game!")
 
 	def frames_per_fall(self):
-		return 360/(GRAVITY+self.framecount/60*GRAVITY_INCREASE_PER_SECOND)
+		return 360/(GRAVITY+self.framecount/60*GRAVITY_INCREASE_PER_SECOND+(self.level-1)*GRAVITY_INCREASE_PER_LEVEL)
 
 	def check_button_press(self,i):
 		if self.buttons[i] and self.buttons_release_wait[i]:
@@ -116,9 +117,10 @@ class GameLogic(GameState):
 				update_piece_display(PIECE_MATRICIES[self.hold_piece],self.hold_piece,self.hold_display)
 			self.cur_piece = self.get_next_piece()
 			
-		self.score+=self.curframescore
+		self.score+=self.curframescore*self.level
 		self.curframescore = 0
-
+		while self.level*(self.level+1) < self.linecount:
+			self.level+=1
 		self.cur_x = BOARD_WIDTH//2-2+BOARD_WIDTH%2
 		self.cur_y = BOARD_HEIGHT-3
 		self.until_next_fall = self.frames_per_fall()
@@ -367,6 +369,7 @@ class GameLogic(GameState):
 			ret+="0"
 		ret+=str(int((self.framecount%(60*60))/6)/10) + "\n"
 		ret+="Lines: " + str(self.linecount) + "\n"
-		ret+= "Score: " + str(self.score)
+		ret+="Score: " + str(self.score) + "\n"
+		ret+="Level " + str(self.level)
 		
 		return ret
