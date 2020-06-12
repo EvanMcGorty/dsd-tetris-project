@@ -15,3 +15,4 @@ NEXT_PIECES = 5 #How many next pieces are displayed to the right of the board
 PIECE_HOLDS = True #Whether to enable holds, which let you store a piece for later
 SPRINT_LINE_COUNT = 20 #How many lines the player must clear in order to win in sprint
 BLITZ_TIME_AMOUNT = 60*60 #How many frames the player must survive for to win in blitz
+RNG_SEED = None #A particular seed for random number generation. Set this to None or a number

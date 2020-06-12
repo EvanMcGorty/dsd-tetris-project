@@ -2,5 +2,9 @@ Run pytris.py to play
 Edit settings to your liking in editable_keybinds_settings.py, editable_player_settings.py, and editable_visual_settings.py
 To end the game after 1 minute, pass the argument "blitz"
 To end the game after 20 lines, pass the argument "sprint"
+Note: when recording and replaying, the same RNG_SEED must be used, and all settings and arguments must be the same
+To record a game to the file "replay", pass the argument "record"
+To replay a game from the file "replay", pass the argument "playback"
+After a game is done replaying, the user can take back control over the game. 
 For 2 players, pass the argument "2p"
 For player 2 controls, use a program like joytokey and map a controller to the keybinds in editable_keybinds_settings_p2.py

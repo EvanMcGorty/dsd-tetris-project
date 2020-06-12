@@ -24,13 +24,15 @@ def paint_canvas(canvas,board,piecegridwidth,gridwidth):
 
 class GameWidget(tk.Frame,GameLogic):
 
-	def __init__(self, master=None,rng=random.Random(),keybinds = p1controls.keybinds,linegoal=None,timegoal=None):
+	def __init__(self, master=None,rng=random.Random(),every_frame_call=None,keybinds = p1controls.keybinds,linegoal=None,timegoal=None):
 		tk.Frame.__init__(self,master)
 		GameLogic.__init__(self,rng,keybinds,linegoal,timegoal)
 		self.master = master
 		if LOG_TIME_OFFSET:
 			self.time0 = time.time()
 		self.wait_longer = False
+
+		self.every_frame_call = every_frame_call
 
 		self.piece_display_height = PIECE_DISPLAY_HEIGHT*PIECE_SIZE
 		self.piece_display_width = PIECE_DISPLAY_WIDTH*PIECE_SIZE
@@ -72,7 +74,6 @@ class GameWidget(tk.Frame,GameLogic):
 
 		self.bind('<Key>',self.turn_key_on)
 		self.bind('<KeyRelease>',self.turn_key_off)
-		self.run_frame()
 
 	def turn_key_on(self,keyname):
 		for i in range(0,len(self.keybinds)):
@@ -132,6 +133,9 @@ class GameWidget(tk.Frame,GameLogic):
 			self.wait_longer = (self.framecount%CLOCKCHECK_PERIOD)/60>(time.time()-self.timel)
 		else:
 			self.wait_longer = not(self.framecount%3)
+
+		if self.every_frame_call!=None:
+			self.every_frame_call()
 
 		self.perform_frame_logic()
 		self.paint_board()
